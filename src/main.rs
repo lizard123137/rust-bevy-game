@@ -1,25 +1,30 @@
+use avian3d::prelude::*;
 use bevy::prelude::*;
 use bevy_obj::ObjPlugin;
 
 mod hud;
+mod input;
 mod player;
-mod physics;
+mod plane;
 mod scene;
 mod terrain;
 
 use hud::HUDPlugin;
+use input::InputPlugin;
 use player::PlayerPlugin;
-use physics::PhysicsPlugin;
+use plane::PlanePlugin;
 use scene::ScenePlugin;
 use terrain::TerrainPlugin;
 
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
+        .add_plugins(PhysicsPlugins::default())
         .add_plugins(ObjPlugin)
         .add_plugins(HUDPlugin)
+        .add_plugins(InputPlugin)
         .add_plugins(PlayerPlugin)
-        .add_plugins(PhysicsPlugin)
+        .add_plugins(PlanePlugin)
         .add_plugins(ScenePlugin)
         .add_plugins(TerrainPlugin)
         .add_systems(Startup, (
@@ -46,11 +51,16 @@ fn spawn_world(
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
-    let floor = meshes.add(Plane3d::new(Vec3::Y, Vec2::splat(10.0)));
+    let floor = meshes.add(Plane3d::new(Vec3::Y, Vec2::splat(50.0)));
     let cube = meshes.add(Cuboid::new(2.0, 0.5, 1.0));
     let material = materials.add(Color::WHITE);
 
-    commands.spawn((Mesh3d(floor), MeshMaterial3d(material.clone())));
+    commands.spawn((
+        RigidBody::Static,
+        Collider::cuboid(50.0, 1.0, 50.0),
+        Mesh3d(floor),
+        MeshMaterial3d(material.clone())
+    ));
 
     commands.spawn((
         Mesh3d(cube.clone()),

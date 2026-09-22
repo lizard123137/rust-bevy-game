@@ -1,4 +1,4 @@
-use crate::physics::Plane;
+use crate::plane::Plane;
 use bevy::prelude::*;
 
 pub struct HUDPlugin;
@@ -41,5 +41,11 @@ fn update_throttle(
     plane: Single<&Plane>,
     mut text: Single<&mut Text, With<ThrottleText>>,
 ) {
-    text.0 = format!("Throttle: {}", plane.throttle);
+    text.0 = format!(
+        "Aileron: {}\nElevator: {}\nRudder: {}\nThrottle: {}",
+        plane.aileron,
+        plane.elevator,
+        plane.rudder,
+        plane.throttle
+    );
 }
