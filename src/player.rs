@@ -2,17 +2,14 @@ use crate::physics::{
     Velocity,
     PhysicalTranslation,
     PreviousPhysicalTranslation,
+    Plane,
     Gravity,
+    GravityScale,
+    Lift,
+    Drag,
 };
-use std::f32::consts::FRAC_PI_2;
 
-use bevy::{
-    camera::visibility::RenderLayers,
-    color::palettes::tailwind,
-    input::mouse::AccumulatedMouseMotion,
-    light::NotShadowCaster,
-    prelude::*,
-};
+use bevy::prelude::*;
 
 pub struct PlayerPlugin;
 
@@ -31,7 +28,6 @@ impl Plugin for PlayerPlugin {
             RunFixedMainLoop,
             (
                 (
-                    rotate_camera,
                     accumulate_input
                 )
                     .chain()
@@ -49,22 +45,12 @@ impl Plugin for PlayerPlugin {
 
 #[derive(Debug, Component, Clone, Copy, PartialEq, Default, Deref, DerefMut)]
 struct AccumulatedInput {
-    movement: Vec2,
-}
-
-#[derive(Debug, Component, Deref, DerefMut)]
-struct CameraSensitivity(Vec2);
-
-impl Default for CameraSensitivity {
-    fn default() -> Self {
-        Self(
-            Vec2::new(0.003, 0.002),
-        )
-    }
+    rotation: Vec3,
 }
 
 fn spawn_player(
     mut commands: Commands,
+    asset_server: Res<AssetServer>,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
@@ -77,9 +63,11 @@ fn spawn_player(
         Velocity::default(),
         PhysicalTranslation(spawn_position),
         PreviousPhysicalTranslation(spawn_position),
-        CameraSensitivity::default(),
-        Visibility::default(),
         Gravity,
+        GravityScale(0.5),
+        Lift(0.5),
+        Plane{thrust: 10.0, throttle: 0.5},
+        Drag::default(),
         children![
             (
                 Camera3d::default(),
@@ -87,63 +75,92 @@ fn spawn_player(
                     fov: 90.0_f32.to_radians(),
                     ..default()
                 }),
+                Transform::from_xyz(0.0, 2.0, 3.0),
             ),
+            (
+                Mesh3d(
+                    asset_server.load("models/plane.obj")
+                ),
+                MeshMaterial3d(materials.add(StandardMaterial {
+                    base_color: Color::linear_rgb(1.0, 0.5, 0.0),
+                    ..default()
+                })),
+                Transform::from_rotation(
+                    Quat::from_euler(
+                        EulerRot::XYZ,
+                        -90.0_f32.to_radians(),
+                        0.0_f32.to_radians(),
+                        90.0_f32.to_radians(),
+                    )
+                ),
+            )
         ],
     ));
 }
 
-fn rotate_camera(
-    accumulated_mouse_motion: Res<AccumulatedMouseMotion>,
-    player: Single<(&mut Transform, &CameraSensitivity), With<AccumulatedInput>>,
-) {
-    let (mut transform, camera_sensitivity) = player.into_inner();
-
-    let delta = accumulated_mouse_motion.delta;
-
-    if delta != Vec2::ZERO {
-        let delta_yaw = -delta.x * camera_sensitivity.x;
-        let delta_pitch = -delta.y * camera_sensitivity.y;
-
-        let (yaw, pitch, roll) = transform.rotation.to_euler(EulerRot::YXZ);
-        let yaw = yaw + delta_yaw;
-
-        const PITCH_LIMIT: f32 = FRAC_PI_2 - 0.01;
-        let pitch = (pitch + delta_pitch).clamp(-PITCH_LIMIT, PITCH_LIMIT);
-
-        transform.rotation = Quat::from_euler(EulerRot::YXZ, yaw, pitch, roll);
-    }
-}
-
 fn accumulate_input(
     keyboard_input: Res<ButtonInput<KeyCode>>,
-    player: Single<(&Transform, &mut AccumulatedInput, &mut Velocity)>,
+    player: Single<(
+        &mut Transform,
+        &mut AccumulatedInput,
+        &mut Plane,
+        &Velocity
+    )>,
 ) {
-    const SPEED: f32 = 4.0;
-    let (player_transform, mut input, mut velocity) = player.into_inner();
-    input.movement = Vec2::ZERO;
+    let (
+        mut player_transform,
+        mut input,
+        mut plane,
+        velocity
+    ) = player.into_inner();
+    input.rotation = Vec3::ZERO;
     
+    const TURN_SPEED: f32 = 0.1;
+    const TURN_SPEED_AT: f32 = 50.0;
+
+    let forward_speed = velocity.0
+        .dot(*player_transform.forward())
+        .max(0.0);
+
+    let speed_factor = (forward_speed / TURN_SPEED_AT).clamp(0.0, 1.0);
+    let turn_amount = TURN_SPEED * speed_factor;
+
     if keyboard_input.pressed(KeyCode::KeyW) {
-        input.movement.y += 1.0;
+        input.rotation.x -= turn_amount;
     }
     if keyboard_input.pressed(KeyCode::KeyS) {
-        input.movement.y -= 1.0;
+        input.rotation.x += turn_amount;
+    }
+    if keyboard_input.pressed(KeyCode::KeyQ) {
+        input.rotation.y += turn_amount;
+    }
+    if keyboard_input.pressed(KeyCode::KeyE) {
+        input.rotation.y -= turn_amount;
     }
     if keyboard_input.pressed(KeyCode::KeyA) {
-        input.movement.x -= 1.0;
+        input.rotation.z += turn_amount;
     }
     if keyboard_input.pressed(KeyCode::KeyD) {
-        input.movement.x += 1.0;
+        input.rotation.z -= turn_amount;
     }
 
-    let input_3d = Vec3 {
-        x: input.movement.x,
-        y: 0.0,
-        z: -input.movement.y,
-    };
+    // Throttle
+    if keyboard_input.pressed(KeyCode::KeyF) {
+        plane.throttle += 0.1;
+    }
+    if keyboard_input.pressed(KeyCode::KeyV) {
+        plane.throttle -= 0.1;
+    }
+    plane.throttle = plane.throttle.clamp(0.0, 1.0);
 
-    let rotated_input = player_transform.rotation * input_3d;
+    let delta_rotation = Quat::from_euler(
+        EulerRot::YXZ,
+        input.rotation.y,
+        input.rotation.x,
+        input.rotation.z,
+    );
 
-    velocity.0 = rotated_input.clamp_length_max(1.0) * SPEED;
+    player_transform.rotation *= delta_rotation;
 }
 
 #[derive(Resource, Debug, Deref, DerefMut, Default)]

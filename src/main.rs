@@ -1,16 +1,27 @@
 use bevy::prelude::*;
+use bevy_obj::ObjPlugin;
 
+mod hud;
 mod player;
 mod physics;
+mod scene;
+mod terrain;
 
+use hud::HUDPlugin;
 use player::PlayerPlugin;
 use physics::PhysicsPlugin;
+use scene::ScenePlugin;
+use terrain::TerrainPlugin;
 
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
+        .add_plugins(ObjPlugin)
+        .add_plugins(HUDPlugin)
         .add_plugins(PlayerPlugin)
         .add_plugins(PhysicsPlugin)
+        .add_plugins(ScenePlugin)
+        .add_plugins(TerrainPlugin)
         .add_systems(Startup, (
             spawn_world,
             spawn_lights,
@@ -18,8 +29,20 @@ fn main() {
         .run();
 }
 
+//
+// Notes on making realistic flight
+//
+// Drag increases quadratically with speed. Going 2x fast increases drag 4x.
+// Flaps increase lift at the cost of also increasing drag. (Only used at slow speeds).
+//
+// TODOS
+// TODO add mass
+// TODO account for angle of attack for lift
+//
+
 fn spawn_world(
     mut commands: Commands,
+    asset_server: Res<AssetServer>,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
@@ -37,8 +60,16 @@ fn spawn_world(
 
     commands.spawn((
         Mesh3d(cube),
-        MeshMaterial3d(material),
+        MeshMaterial3d(material.clone()),
         Transform::from_xyz(0.75, 1.75, 0.0),
+    ));
+
+    commands.spawn((
+        Mesh3d(
+                asset_server.load("models/plane.obj")
+        ),
+        MeshMaterial3d(material),
+        Transform::from_xyz(0.5, 5.0, 0.0),
     ));
 }
 
