@@ -6,7 +6,7 @@ mod physics;
 
 use hud::HUDPlugin;
 use player::PlayerPlugin;
-use physics::PhysicsPlugin;
+use physics::{Rigidbody, PhysicsPlugin};
 
 // 2D magic frog game where you swing by tongue
 // The frog can jump left and right with you holding the arrows for a specified time
@@ -37,6 +37,11 @@ fn spawn_world(
     
     commands.spawn(
         (
+            Rigidbody {
+                size: Vec2::new(500.0, 10.0),
+                moveable: false,
+                ..default()
+            },
             Mesh2d(floor),
             MeshMaterial2d(color),
             Transform::from_xyz(0.0, 0.0, 0.0),

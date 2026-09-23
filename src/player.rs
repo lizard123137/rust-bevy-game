@@ -22,6 +22,8 @@ impl Plugin for PlayerPlugin {
             update_tongue
                 .run_if(frog_tongue_active),
 
+            update_orientation,
+
             activate_jump.run_if(input_just_pressed(MouseButton::Left)),
             deactivate_jump.run_if(input_just_released(MouseButton::Left)),
 
@@ -110,7 +112,17 @@ fn update_tongue(
     tongue_transform.rotation = Quat::from_rotation_z(angle);
 }
 
-fn activate_jump(mut query: Single<(&mut Rigidbody, &mut Frog)>) {
+fn update_orientation(query: Single<(&mut Sprite, &Rigidbody), With<Frog>>) {
+    let (mut sprite, rb) = query.into_inner();
+
+    if rb.velocity.x >= 0.0 {
+        sprite.flip_x = false;
+    } else {
+        sprite.flip_x = true;
+    }
+}
+
+fn activate_jump(query: Single<(&mut Rigidbody, &mut Frog)>) {
     let (mut rb, mut frog) = query.into_inner();
 
     frog.jump_active = true;
@@ -150,7 +162,7 @@ fn activate_tongue(
     let angle = direction.y.atan2(direction.x);
 
     let tongue = meshes.add(Rectangle::new(distance, 2.0));
-    let color = materials.add(Color::srgb(1.0, 0.5, 0.5));     
+    let color = materials.add(Color::srgb(0.2, 0.5, 0.0));     
 
     frog.tongue_len = distance;
 
