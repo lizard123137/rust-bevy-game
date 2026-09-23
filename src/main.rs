@@ -1,95 +1,45 @@
-use avian3d::prelude::*;
 use bevy::prelude::*;
-use bevy_obj::ObjPlugin;
 
 mod hud;
-mod input;
 mod player;
-mod plane;
-mod scene;
-mod terrain;
+mod physics;
 
 use hud::HUDPlugin;
-use input::InputPlugin;
 use player::PlayerPlugin;
-use plane::PlanePlugin;
-use scene::ScenePlugin;
-use terrain::TerrainPlugin;
+use physics::PhysicsPlugin;
+
+// 2D magic frog game where you swing by tongue
+// The frog can jump left and right with you holding the arrows for a specified time
+// The jump strength increses as you hold it
+
+// For FX add vignette, screen shake and pixelated bloom
 
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_plugins(PhysicsPlugins::default())
-        .add_plugins(ObjPlugin)
         .add_plugins(HUDPlugin)
-        .add_plugins(InputPlugin)
         .add_plugins(PlayerPlugin)
-        .add_plugins(PlanePlugin)
-        .add_plugins(ScenePlugin)
-        .add_plugins(TerrainPlugin)
+        .add_plugins(PhysicsPlugin)
         .add_systems(Startup, (
             spawn_world,
-            spawn_lights,
         ))
         .run();
 }
 
-//
-// Notes on making realistic flight
-//
-// Drag increases quadratically with speed. Going 2x fast increases drag 4x.
-// Flaps increase lift at the cost of also increasing drag. (Only used at slow speeds).
-//
-// TODOS
-// TODO add mass
-// TODO account for angle of attack for lift
-//
-
 fn spawn_world(
     mut commands: Commands,
-    asset_server: Res<AssetServer>,
     mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<StandardMaterial>>,
+    mut materials: ResMut<Assets<ColorMaterial>>,
 ) {
-    let floor = meshes.add(Plane3d::new(Vec3::Y, Vec2::splat(50.0)));
-    let cube = meshes.add(Cuboid::new(2.0, 0.5, 1.0));
-    let material = materials.add(Color::WHITE);
 
-    commands.spawn((
-        RigidBody::Static,
-        Collider::cuboid(50.0, 1.0, 50.0),
-        Mesh3d(floor),
-        MeshMaterial3d(material.clone())
-    ));
-
-    commands.spawn((
-        Mesh3d(cube.clone()),
-        MeshMaterial3d(material.clone()),
-        Transform::from_xyz(0.0, 0.25, -3.0),
-    ));
-
-    commands.spawn((
-        Mesh3d(cube),
-        MeshMaterial3d(material.clone()),
-        Transform::from_xyz(0.75, 1.75, 0.0),
-    ));
-
-    commands.spawn((
-        Mesh3d(
-                asset_server.load("models/plane.obj")
-        ),
-        MeshMaterial3d(material),
-        Transform::from_xyz(0.5, 5.0, 0.0),
-    ));
-}
-
-fn spawn_lights(mut commands: Commands) {
-    commands.spawn((
-        PointLight {
-            color: Color::WHITE,
-            shadow_maps_enabled: true,
-            ..default()
-        },
-        Transform::from_xyz(-2.0, 4.0, -0.75),
-    ));
+    let floor = meshes.add(Rectangle::new(500.0, 10.0));
+    let color = materials.add(Color::srgb(0.0, 0.7, 0.2));     
+    
+    commands.spawn(
+        (
+            Mesh2d(floor),
+            MeshMaterial2d(color),
+            Transform::from_xyz(0.0, 0.0, 0.0),
+        )
+    );
 }

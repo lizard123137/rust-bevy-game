@@ -1,4 +1,3 @@
-use crate::plane::Plane;
 use bevy::prelude::*;
 
 pub struct HUDPlugin;
@@ -6,7 +5,6 @@ pub struct HUDPlugin;
 impl Plugin for HUDPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, spawn_text);
-        app.add_systems(Update, update_throttle);
     }
 }
 
@@ -35,17 +33,4 @@ fn spawn_text(mut commands: Commands) {
             ),
         ],
     ));
-}
-
-fn update_throttle(
-    plane: Single<&Plane>,
-    mut text: Single<&mut Text, With<ThrottleText>>,
-) {
-    text.0 = format!(
-        "Aileron: {}\nElevator: {}\nRudder: {}\nThrottle: {}",
-        plane.aileron,
-        plane.elevator,
-        plane.rudder,
-        plane.throttle
-    );
 }
