@@ -1,4 +1,5 @@
 use bevy::{
+    camera::visibility::RenderLayers,
     input::common_conditions::*,
     image::{ImageLoaderSettings, ImageSampler},
     window::PrimaryWindow,
@@ -33,7 +34,8 @@ impl Plugin for PlayerPlugin {
     }
 }
 
-
+#[derive(Debug, Component)]
+pub struct PlayerCamera;
 
 #[derive(Debug, Component)]
 pub struct Frog {
@@ -46,14 +48,10 @@ pub struct Frog {
 
 fn spawn_player(
     mut commands: Commands,
+    mut images: ResMut<Assets<Image>>,
     asset_server: Res<AssetServer>,
 ) {
-    commands.spawn((
-        Camera2d,
-        Transform::from_scale(Vec3::splat(0.25)), // TODO zoom with scroll
-    ));
-
-    let image = asset_server
+    let frog_image = asset_server
         .load_builder()
         .with_settings(|settings: &mut ImageLoaderSettings| {
             settings.sampler = ImageSampler::nearest();
@@ -68,15 +66,23 @@ fn spawn_player(
             target_pos: Vec2::new(0.0, 0.0),
             tongue_len: 0.0,
         },
-        Sprite::from_image(image),
+        Sprite::from_image(frog_image),
         Transform::from_xyz(0.0, 50.0, 0.0),
+        children![
+            (
+                Camera2d,
+                PlayerCamera,
+                RenderLayers::from_layers(&[0, 1]), // scene + water
+                Transform::from_scale(Vec3::splat(0.25)), // TODO zoom with scroll
+            )
+        ],
     ));
 }
 
 fn update_target(
     mut frog: Single<&mut Frog>,
     window: Single<&Window, With<PrimaryWindow>>,
-    cameras: Query<(&Camera, &GlobalTransform)>,
+    cameras: Query<(&Camera, &GlobalTransform), With<PlayerCamera>>,
 ) {
     let Ok((camera, camera_transform)) = cameras.single() else {
         return;
