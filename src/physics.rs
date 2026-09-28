@@ -132,7 +132,10 @@ fn apply_tongue_forces(
     }
 }
 
-fn check_collisions(mut query: Query<(Entity, &mut Transform, &mut Rigidbody)>) {
+fn check_collisions(
+    mut query: Query<(Entity, &mut Transform, &mut Rigidbody)>,
+    mut frogs: Query<(&mut Frog)>,
+) {
     let mut combinations = query.iter_combinations_mut();
 
     while let Some([(ent_a, mut t_a, mut rb_a), (ent_b, mut t_b, mut rb_b)]) = combinations.fetch_next() {
@@ -158,7 +161,7 @@ fn check_collisions(mut query: Query<(Entity, &mut Transform, &mut Rigidbody)>) 
 
                 if rb_a.moveable && !rb_b.moveable {
                     t_a.translation += push;
-                    rb_a.velocity.x = 0.0
+                    rb_a.velocity.x = 0.0;
                 } else if !rb_a.moveable && rb_b.moveable {
                     t_b.translation -= push;
                     rb_b.velocity.x = 0.0;
@@ -186,6 +189,9 @@ fn check_collisions(mut query: Query<(Entity, &mut Transform, &mut Rigidbody)>) 
                 }
             }
 
+            if let Ok(mut frog) = frogs.get_mut(ent_a) {
+                frog.grounded = true;
+            }
         }
     }
 }

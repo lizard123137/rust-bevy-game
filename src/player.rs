@@ -1,5 +1,7 @@
 use bevy::{
     camera::visibility::RenderLayers,
+    color::palettes::css::*,
+    math::Isometry2d,
     input::common_conditions::*,
     image::{ImageLoaderSettings, ImageSampler},
     window::PrimaryWindow,
@@ -26,10 +28,12 @@ impl Plugin for PlayerPlugin {
             update_orientation,
 
             activate_jump.run_if(input_just_pressed(MouseButton::Left)),
-            deactivate_jump.run_if(input_just_released(MouseButton::Left)),
 
             activate_tongue.run_if(input_just_pressed(MouseButton::Right)),
             deactivate_tongue.run_if(input_just_released(MouseButton::Right)),
+        ));
+        app.add_systems(FixedUpdate, (
+            debug_player_gizmos,
         ));
     }
 }
@@ -39,11 +43,12 @@ pub struct PlayerCamera;
 
 #[derive(Debug, Component)]
 pub struct Frog {
-    pub jump_active: bool,
+    pub grounded: bool,
     pub tongue_active: bool,
 
     pub target_pos: Vec2,
     pub tongue_len: f32,
+    pub range: f32,
 }
 
 fn spawn_player(
@@ -60,11 +65,12 @@ fn spawn_player(
 
     commands.spawn((
         Rigidbody::default(),
-        Frog{
-            jump_active: false,
+        Frog {
+            grounded: false,
             tongue_active: false,
             target_pos: Vec2::new(0.0, 0.0),
             tongue_len: 0.0,
+            range: 50.0,
         },
         Sprite::from_image(frog_image),
         Transform::from_xyz(0.0, 50.0, 0.0),
@@ -128,17 +134,22 @@ fn update_orientation(query: Single<(&mut Sprite, &Rigidbody), With<Frog>>) {
     }
 }
 
-fn activate_jump(query: Single<(&mut Rigidbody, &mut Frog)>) {
-    let (mut rb, mut frog) = query.into_inner();
+fn activate_jump(query: Single<(&mut Rigidbody, &Transform, &mut Frog)>) {
+    let (mut rb, t, mut frog) = query.into_inner();
 
-    frog.jump_active = true;
+    if !frog.grounded {
+        return;
+    }
 
-    // Hack solution
-    rb.force += Vec2::new(0.0, 2500.0);    
-}
+    let mut direction = frog.target_pos - t.translation.truncate();
+    let magnitude = direction.length();
+    direction /= magnitude; // Normalize
 
-fn deactivate_jump(mut frog: Single<&mut Frog>) {
-    frog.jump_active = false;
+    let jump_strength = magnitude.clamp(0.0, frog.range);
+
+    rb.force += direction * jump_strength * 200.0;
+    
+    frog.grounded = false;
 }
 
 #[derive(Debug, Component)]
@@ -211,5 +222,20 @@ fn deactivate_tongue(
 
     for entity in query.iter() {
         commands.entity(entity).despawn();
+    }
+}
+
+fn debug_player_gizmos(
+    mut gizmos: Gizmos,
+    query: Query<(&Transform, &Rigidbody, &Frog)>
+) {
+    for (transform, rb, frog) in query {
+        // Draw range
+        gizmos
+            .circle_2d(transform.translation.truncate(), frog.range, PURPLE)
+            .resolution(64);
+
+        // Draw target
+        gizmos.line_2d(transform.translation.truncate(), frog.target_pos, PURPLE);
     }
 }
