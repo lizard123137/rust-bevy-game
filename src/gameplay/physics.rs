@@ -4,7 +4,7 @@ use bevy::{
     prelude::*,
 };
 
-use crate::player::{
+use crate::gameplay::player::{
     Frog,
     frog_tongue_active,
 };
@@ -134,11 +134,11 @@ fn apply_tongue_forces(
 
 fn check_collisions(
     mut query: Query<(Entity, &mut Transform, &mut Rigidbody)>,
-    mut frogs: Query<(&mut Frog)>,
+    mut frogs: Query<&mut Frog>,
 ) {
     let mut combinations = query.iter_combinations_mut();
 
-    while let Some([(ent_a, mut t_a, mut rb_a), (ent_b, mut t_b, mut rb_b)]) = combinations.fetch_next() {
+    while let Some([(ent_a, mut t_a, mut rb_a), (_ent_b, mut t_b, mut rb_b)]) = combinations.fetch_next() {
         if !rb_a.moveable && !rb_b.moveable {
             continue;
         }

@@ -1,14 +1,15 @@
 use bevy::{
     camera::visibility::RenderLayers,
     color::palettes::css::*,
-    math::Isometry2d,
+    core_pipeline::tonemapping::{DebandDither, Tonemapping},
     input::common_conditions::*,
     image::{ImageLoaderSettings, ImageSampler},
-    window::PrimaryWindow,
+    post_process::bloom::Bloom,
     prelude::*,
+    window::PrimaryWindow,
 };
 
-use crate::physics::Rigidbody;
+use crate::gameplay::physics::Rigidbody;
 
 pub struct PlayerPlugin;
 
@@ -53,7 +54,6 @@ pub struct Frog {
 
 fn spawn_player(
     mut commands: Commands,
-    mut images: ResMut<Assets<Image>>,
     asset_server: Res<AssetServer>,
 ) {
     let frog_image = asset_server
@@ -77,6 +77,13 @@ fn spawn_player(
         children![
             (
                 Camera2d,
+                Camera {
+                    clear_color: ClearColorConfig::Custom(Color::BLACK),
+                    ..default()
+                },
+                Tonemapping::TonyMcMapface,
+                Bloom::default(),
+                DebandDither::Enabled,
                 PlayerCamera,
                 RenderLayers::from_layers(&[0, 1]), // scene + water
                 Transform::from_scale(Vec3::splat(0.25)), // TODO zoom with scroll
@@ -227,9 +234,9 @@ fn deactivate_tongue(
 
 fn debug_player_gizmos(
     mut gizmos: Gizmos,
-    query: Query<(&Transform, &Rigidbody, &Frog)>
+    query: Query<(&Transform, &Frog)>
 ) {
-    for (transform, rb, frog) in query {
+    for (transform, frog) in query {
         // Draw range
         gizmos
             .circle_2d(transform.translation.truncate(), frog.range, PURPLE)
