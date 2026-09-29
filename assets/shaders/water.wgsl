@@ -1,5 +1,9 @@
 #import bevy_sprite::mesh2d_vertex_output::VertexOutput
 #import bevy_sprite::mesh2d_view_bindings::view
+#import bevy_render::globals::Globals
+#import custom::noise::fbm
+
+@group(0) @binding(1) var<uniform> globals: Globals;
 
 @group(2) @binding(0) var<uniform> material_color: vec4<f32>;
 @group(2) @binding(1) var scene_texture: texture_2d<f32>;
@@ -16,9 +20,12 @@ fn fragment(mesh: VertexOutput) -> @location(0) vec4<f32> {
 
     var reflection_uv = vec2<f32>(screen_uv.x, 2.0 * surface_uv_y - screen_uv.y);
 
-    reflection_uv.x += sin(mesh.uv.y * 20.0) * 0.01;
+    let noise_pos = mesh.uv * 8.0 + vec2<f32>(0.0, globals.time * 0.2);
+    let n = fbm(noise_pos, 4);
+    reflection_uv.x += n * 0.02;
 
     let reflection_color = textureSample(scene_texture, scene_sampler, reflection_uv);
-    let final_color = mix(reflection_color, material_color, 0.4);
+    var final_color = mix(reflection_color, material_color, 0.4);
+
     return vec4<f32>(final_color.rgb, 0.5);
 }
