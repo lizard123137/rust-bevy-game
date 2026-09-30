@@ -9,6 +9,7 @@ use bevy::{
     window::PrimaryWindow,
 };
 
+use crate::effects::lofi::LofiEffect;
 use crate::gameplay::physics::Rigidbody;
 
 pub struct PlayerPlugin;
@@ -81,6 +82,7 @@ fn spawn_player(
                     clear_color: ClearColorConfig::Custom(Color::BLACK),
                     ..default()
                 },
+                LofiEffect::new(2.0, 15.0),
                 Tonemapping::TonyMcMapface,
                 Bloom::default(),
                 DebandDither::Enabled,

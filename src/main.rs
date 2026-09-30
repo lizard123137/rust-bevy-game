@@ -8,7 +8,12 @@ use crate::hud::HUDPlugin;
 
 use bevy::prelude::*;
 
-// For FX add vignette, screen shake and pixelated bloom
+// TODO add screen shake
+// TODO add gamma to posterization
+// TODO add random particles
+// TODO store collision vector so you cant jump into what you're jumping off of
+// TODO eating mushrooms
+// TODO 3D color split shader
 
 fn main() {
     App::new()
