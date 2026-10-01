@@ -1,16 +1,17 @@
 use bevy::prelude::*;
 
+use crate::GameState;
 use crate::gameplay::player::Frog;
 
 pub struct HUDPlugin;
 
 impl Plugin for HUDPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, (
+        app.add_systems(OnEnter(GameState::Game), (
             spawn_text,
         ));
         app.add_systems(Update, (
-            update_text,
+            update_text.run_if(in_state(GameState::Game)),
         ));
     }
 }

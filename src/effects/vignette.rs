@@ -1,10 +1,11 @@
 use bevy::prelude::*;
+use crate::GameState;
 
 pub struct VignettePlugin;
 
 impl Plugin for VignettePlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, (
+        app.add_systems(OnEnter(GameState::Game), (
             spawn_vignette,
         ));
     }

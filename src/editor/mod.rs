@@ -4,6 +4,7 @@ mod tiles;
 use bevy::prelude::*;
 use bevy_common_assets::ron::RonAssetPlugin;
 
+use crate::GameState;
 use crate::gameplay::{
     player::Frog,
     physics::Rigidbody,
@@ -19,12 +20,14 @@ impl Plugin for EditorPlugin {
             RonAssetPlugin::<LevelData>::new(&["level.ron"]),
             RonAssetPlugin::<TileRegistry>::new(&["tile.ron"]),
         ));
-        app.add_systems(Startup, (
+        app.add_systems(OnEnter(GameState::Editor), (
             load_assets,
             spawn_camera,
         ));
         app.add_systems(Update, (
-            spawn_level.run_if(resource_exists::<GameAssets>),
+            spawn_level
+                .run_if(in_state(GameState::Editor))
+                .run_if(resource_exists::<GameAssets>),
         ));
     }
 }

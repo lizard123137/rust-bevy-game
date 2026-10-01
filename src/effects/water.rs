@@ -21,6 +21,7 @@ use bevy::{
     sprite_render::{AlphaMode2d, Material2d, Material2dPlugin},
 };
 
+use crate::GameState;
 use crate::gameplay::player::PlayerCamera;
 
 pub struct WaterPlugin;
@@ -28,11 +29,12 @@ pub struct WaterPlugin;
 impl Plugin for WaterPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins(Material2dPlugin::<WaterMaterial>::default());
-        app.add_systems(Startup, (
+        app.add_systems(OnEnter(GameState::Game), (
             spawn_water,
         ));
         app.add_systems(Update, (
-            update_fx_camera,
+            update_fx_camera
+                .run_if(in_state(GameState::Game)),
         ));
     }
 }

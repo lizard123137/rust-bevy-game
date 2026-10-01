@@ -8,6 +8,7 @@ use bevy::{
     window::PrimaryWindow,
 };
 
+use crate::GameState;
 use crate::effects::lofi::LofiEffect;
 use crate::gameplay::physics::Rigidbody;
 
@@ -19,19 +20,28 @@ pub fn frog_tongue_active(query: Query<&Frog>) -> bool {
 
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, spawn_player);
+        app.add_systems(OnEnter(GameState::Game), spawn_player);
         app.add_systems(Update, (
             update_target
+                .run_if(in_state(GameState::Game))
                 .run_if(not(frog_tongue_active)),
             update_tongue
+                .run_if(in_state(GameState::Game))
                 .run_if(frog_tongue_active),
 
-            update_orientation,
+            update_orientation
+                .run_if(in_state(GameState::Game)),
 
-            activate_jump.run_if(input_just_pressed(MouseButton::Left)),
+            activate_jump
+                .run_if(in_state(GameState::Game))
+                .run_if(input_just_pressed(MouseButton::Left)),
 
-            activate_tongue.run_if(input_just_pressed(MouseButton::Right)),
-            deactivate_tongue.run_if(input_just_released(MouseButton::Right)),
+            activate_tongue
+                .run_if(in_state(GameState::Game))
+                .run_if(input_just_pressed(MouseButton::Right)),
+            deactivate_tongue
+                .run_if(in_state(GameState::Game))
+                .run_if(input_just_released(MouseButton::Right)),
         ));
         // app.add_systems(FixedUpdate, (
         //     _debug_player_gizmos,

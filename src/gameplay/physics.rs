@@ -4,6 +4,7 @@ use bevy::{
     prelude::*,
 };
 
+use crate::GameState;
 use crate::gameplay::player::{
     Frog,
     frog_tongue_active,
@@ -15,11 +16,17 @@ impl Plugin for PhysicsPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(FixedUpdate,
             (
-                apply_gravity,
-                apply_tongue_forces.run_if(frog_tongue_active),
-                check_collisions,
-                apply_force,
-                apply_velocity,
+                apply_gravity
+                    .run_if(in_state(GameState::Game)),
+                apply_tongue_forces
+                    .run_if(in_state(GameState::Game))
+                    .run_if(frog_tongue_active),
+                check_collisions
+                    .run_if(in_state(GameState::Game)),
+                apply_force
+                    .run_if(in_state(GameState::Game)),
+                apply_velocity
+                    .run_if(in_state(GameState::Game)),
 
                 //_debug_gizmos,
             ).chain(),

@@ -1,18 +1,18 @@
 use bevy::prelude::*;
 
+use crate::GameState;
 use crate::gameplay::physics::Rigidbody;
 
 pub struct ScenePlugin;
 
 impl Plugin for ScenePlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, spawn_world);
+        app.add_systems(OnEnter(GameState::Game), spawn_world);
     }
 }
 
 fn spawn_world(
     mut commands: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
     asset_server: Res<AssetServer>,
 ) {
     commands.spawn((

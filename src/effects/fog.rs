@@ -6,13 +6,14 @@ use bevy::{
     shader::ShaderRef,
     sprite_render::{AlphaMode2d, Material2d, Material2dPlugin},
 };
+use crate::GameState;
 
 pub struct FogPlugin;
 
 impl Plugin for FogPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins(Material2dPlugin::<FogMaterial>::default());
-        app.add_systems(Startup, (
+        app.add_systems(OnEnter(GameState::Game), (
             spawn_fog,
         ));
     }
