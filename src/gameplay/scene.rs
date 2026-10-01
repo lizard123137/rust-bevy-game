@@ -22,7 +22,7 @@ fn spawn_world(
             ..default()
         },
         Sprite {
-            image: asset_server.load("images/grass.png"),
+            image: asset_server.load("images/tiles/grass.png"),
             image_mode: SpriteImageMode::Tiled {
                 tile_x: true,
                 tile_y: false,
@@ -34,6 +34,13 @@ fn spawn_world(
         Transform::from_xyz(0.0, 0.0, 0.0),
     ));
 
+    commands.spawn((
+        Sprite::from_image(
+            asset_server
+                .load("images/tiles/rock.png")
+        ),
+        Transform::from_xyz(-100.0, 13.0, 1.0),
+    ));
     commands.spawn((
         Sprite::from_image(
             asset_server

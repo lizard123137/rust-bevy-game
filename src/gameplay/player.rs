@@ -33,9 +33,9 @@ impl Plugin for PlayerPlugin {
             activate_tongue.run_if(input_just_pressed(MouseButton::Right)),
             deactivate_tongue.run_if(input_just_released(MouseButton::Right)),
         ));
-        app.add_systems(FixedUpdate, (
-            debug_player_gizmos,
-        ));
+        // app.add_systems(FixedUpdate, (
+        //     _debug_player_gizmos,
+        // ));
     }
 }
 
@@ -57,7 +57,10 @@ fn spawn_player(
     asset_server: Res<AssetServer>,
 ) {
     commands.spawn((
-        Rigidbody::default(),
+        Rigidbody {
+            size: Vec2::new(14.0, 14.0),
+            ..default()
+        },
         Frog {
             grounded: false,
             tongue_active: false,
@@ -71,7 +74,7 @@ fn spawn_player(
             (
                 Camera2d,
                 Camera {
-                    clear_color: ClearColorConfig::Custom(Color::BLACK),
+                    clear_color: ClearColorConfig::Custom(Color::srgb(0.0, 0.15, 0.3)),
                     ..default()
                 },
                 LofiEffect::new(2.0, 50.0, Vec2::new(0.125, 10.0)),
@@ -219,7 +222,7 @@ fn deactivate_tongue(
     }
 }
 
-fn debug_player_gizmos(
+fn _debug_player_gizmos(
     mut gizmos: Gizmos,
     query: Query<(&Transform, &Frog)>
 ) {

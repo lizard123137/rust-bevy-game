@@ -1,0 +1,6 @@
+(
+    tiles: {
+        "grass": (sprite: "images/tiles/grass.png"),
+        "rock": (sprite: "images/tiles/rock.png"),
+    },
+)

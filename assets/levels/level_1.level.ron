@@ -1,0 +1,9 @@
+(
+    name: "Level 1",
+    description: "test level to see if the editor loading works",
+    objects: [
+        (obj_type: Player, pos: (50.0, 50.0)),
+        (obj_type: Mushroom, pos: (-50.0, -50.0)),
+        (obj_type: Tile(name: "grass", solid: true), pos: (50.0, -50.0)),
+    ],
+)

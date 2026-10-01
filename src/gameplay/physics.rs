@@ -21,7 +21,7 @@ impl Plugin for PhysicsPlugin {
                 apply_force,
                 apply_velocity,
 
-                debug_gizmos,
+                //_debug_gizmos,
             ).chain(),
         );
     }
@@ -196,7 +196,7 @@ fn check_collisions(
     }
 }
 
-fn debug_gizmos(
+fn _debug_gizmos(
     mut gizmos: Gizmos,
     query: Query<(&Transform, &Rigidbody)>
 ) {

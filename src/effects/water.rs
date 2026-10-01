@@ -101,7 +101,7 @@ fn spawn_water(
     commands.spawn((
         Mesh2d(meshes.add(Rectangle::new(500.0, 100.0))),
         MeshMaterial2d(materials.add(WaterMaterial {
-            color: LinearRgba::BLUE,
+            color: Srgba::rgb(0.0, 0.125, 0.25).into(),
             scene_texture: scene_image,
             surface_y: 5.0,
         })),
