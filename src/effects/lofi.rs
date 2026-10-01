@@ -17,13 +17,15 @@ impl Plugin for LofiPlugin {
 pub struct LofiEffect {
     pixel_size: f32,
     color_levels: f32,
+    gamma: Vec2,
 }
 
 impl LofiEffect {
-    pub fn new(pixel_size: f32, color_levels: f32) -> Self {
+    pub fn new(pixel_size: f32, color_levels: f32, gamma: Vec2) -> Self {
         Self {
             pixel_size: pixel_size,
             color_levels: color_levels,
+            gamma: gamma,
             ..Default::default()
         }
     }

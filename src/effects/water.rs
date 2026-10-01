@@ -91,8 +91,11 @@ fn spawn_water(
         Tonemapping::TonyMcMapface,
         Bloom::default(),
         DebandDither::Enabled,
-        Transform::from_scale(Vec3::splat(0.25)), // TODO zoom with scroll
         RenderLayers::layer(0),
+        Projection::Orthographic(OrthographicProjection {
+            scale: 0.25,
+            ..OrthographicProjection::default_2d()
+        }),
     ));
 
     commands.spawn((

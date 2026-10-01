@@ -39,7 +39,7 @@ fn spawn_fog(
     commands.spawn((
         Mesh2d(meshes.add(Rectangle::new(500.0, 100.0))),
         MeshMaterial2d(materials.add(FogMaterial {})),
-        Transform::from_xyz(0.0, 10.0, 0.0),
+        Transform::from_xyz(0.0, 10.0, 1.0),
         RenderLayers::layer(1),
     ));
 }

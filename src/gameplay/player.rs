@@ -3,7 +3,6 @@ use bevy::{
     color::palettes::css::*,
     core_pipeline::tonemapping::{DebandDither, Tonemapping},
     input::common_conditions::*,
-    image::{ImageLoaderSettings, ImageSampler},
     post_process::bloom::Bloom,
     prelude::*,
     window::PrimaryWindow,
@@ -57,13 +56,6 @@ fn spawn_player(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
 ) {
-    let frog_image = asset_server
-        .load_builder()
-        .with_settings(|settings: &mut ImageLoaderSettings| {
-            settings.sampler = ImageSampler::nearest();
-        })
-        .load("images/frog.png");
-
     commands.spawn((
         Rigidbody::default(),
         Frog {
@@ -73,7 +65,7 @@ fn spawn_player(
             tongue_len: 0.0,
             range: 50.0,
         },
-        Sprite::from_image(frog_image),
+        Sprite::from_image(asset_server.load("images/frog.png")),
         Transform::from_xyz(0.0, 50.0, 0.0),
         children![
             (
@@ -82,13 +74,16 @@ fn spawn_player(
                     clear_color: ClearColorConfig::Custom(Color::BLACK),
                     ..default()
                 },
-                LofiEffect::new(2.0, 15.0),
+                LofiEffect::new(2.0, 50.0, Vec2::new(0.125, 10.0)),
                 Tonemapping::TonyMcMapface,
                 Bloom::default(),
                 DebandDither::Enabled,
                 PlayerCamera,
                 RenderLayers::from_layers(&[0, 1]), // scene + water
-                Transform::from_scale(Vec3::splat(0.25)), // TODO zoom with scroll
+                Projection::Orthographic(OrthographicProjection {
+                    scale: 0.25,
+                    ..OrthographicProjection::default_2d()
+                }),
             )
         ],
     ));
@@ -192,12 +187,7 @@ fn activate_tongue(
 
     frog.tongue_len = distance;
 
-    sprite.image = asset_server
-        .load_builder()
-        .with_settings(|settings: &mut ImageLoaderSettings| {
-            settings.sampler = ImageSampler::nearest();
-        })
-        .load("images/frog_open.png");
+    sprite.image = asset_server.load("images/frog_open.png");
 
     commands.spawn(
         (
@@ -222,12 +212,7 @@ fn deactivate_tongue(
 ) {
     frog.tongue_active = false;
 
-    sprite.image = asset_server
-        .load_builder()
-        .with_settings(|settings: &mut ImageLoaderSettings| {
-            settings.sampler = ImageSampler::nearest();
-        })
-        .load("images/frog.png");
+    sprite.image = asset_server.load("images/frog.png");
 
     for entity in query.iter() {
         commands.entity(entity).despawn();

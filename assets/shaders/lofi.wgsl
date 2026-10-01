@@ -6,6 +6,7 @@
 struct LofiEffect {
     pixel_size: f32,
     color_levels: f32,
+    gamma: vec2<f32>,
 }
 
 @group(0) @binding(2) var<uniform> settings: LofiEffect;
@@ -18,7 +19,9 @@ fn fragment(in: FullscreenVertexOutput) -> @location(0) vec4<f32> {
     let pixelated_uv = floor(in.uv * pixel_count) / pixel_count;
 
     // Color reduction
-    let color = textureSample(screen_texture, texture_sampler, pixelated_uv);
+    var color = textureSample(screen_texture, texture_sampler, pixelated_uv);
+    color = vec4<f32>(pow(color.rgb, vec3(settings.gamma.x)), color.a);
+
     let grayscale = max(color.r, max(color.g, color.b));
 
     let lower = floor(grayscale * settings.color_levels) / settings.color_levels;
@@ -29,7 +32,10 @@ fn fragment(in: FullscreenVertexOutput) -> @location(0) vec4<f32> {
 
     let level = select(higher, lower, lower_diff < higher_diff);
     let adjustment = level / grayscale;
+    
+    color = vec4<f32>(color.rgb * adjustment, color.a);
+    color = vec4<f32>(pow(color.rgb, vec3(settings.gamma.y)), color.a);
 
     // Return adjusted color
-    return vec4<f32>(color.rgb * adjustment, 1.0);
+    return color;
 }

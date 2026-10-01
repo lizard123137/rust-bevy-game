@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 
+use crate::gameplay::player::Frog;
+
 pub struct HUDPlugin;
 
 impl Plugin for HUDPlugin {
@@ -7,8 +9,14 @@ impl Plugin for HUDPlugin {
         app.add_systems(Startup, (
             spawn_text,
         ));
+        app.add_systems(Update, (
+            update_text,
+        ));
     }
 }
+
+#[derive(Debug, Component)]
+struct DebugText;
 
 fn spawn_text(mut commands: Commands) {
     let font = TextFont {
@@ -26,9 +34,17 @@ fn spawn_text(mut commands: Commands) {
         },
         children![
             (
-                Text::new("Hello World"),
+                Text::new("0.00 0.00"),
                 font,
+                DebugText,
             ),
         ],
     ));
+}
+
+fn update_text(
+    mut text: Single<&mut Text, With<DebugText>>,
+    frog: Single<&Frog>,
+) {
+    text.0 = format!("{:.2} {:.2}", frog.target_pos.x, frog.target_pos.y);
 }
