@@ -16,7 +16,7 @@ pub struct EffectsPlugin;
 
 impl Plugin for EffectsPlugin {
     fn build(&self, app: &mut App) {
-        load_internal_asset!(app, NOISE_SHADER_HANDLE, "../../assets/shaders/noise.wgsl", Shader::from_wgsl);
+        load_internal_asset!(app, NOISE_SHADER_HANDLE, "../../../assets/shaders/noise.wgsl", Shader::from_wgsl);
 
         app.add_plugins((
             fog::FogPlugin,

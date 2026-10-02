@@ -1,29 +1,40 @@
+mod asset_loader;
 mod editor;
-mod effects;
 mod gameplay;
+mod graphics;
+mod level;
 mod ui;
-mod hud;
 
+use crate::asset_loader::AssetLoaderPlugin;
 use crate::editor::EditorPlugin;
-use crate::effects::EffectsPlugin;
 use crate::gameplay::GameplayPlugin;
-use crate::hud::HUDPlugin;
+use crate::graphics::GraphicsPlugin;
+use crate::ui::hud::HUDPlugin;
 use crate::ui::menu::MenuPlugin;
 
 use bevy::prelude::*;
 
 // TODO gameplay
-// TODO     only grapple to rigidbodies with movable==false
-// TODO     store collision vector so you cant jump into what you're jumping off of
-// TODO     controller support (maybe autoaim)
-// TODO     eating mushrooms
-// TODO     talking with druid NPC
+// TODO     Its a horror game, add enemies and sound effects
+// TODO     Only grapple to rigidbodies with movable==false
+// TODO     Store collision vector so you cant jump into what you're jumping off of
+// TODO     Controller support (maybe autoaim)
+// TODO     Info type that will show dialogue (? mark for frog monologue, druids and signs)
+// TODO     Talking with druid NPC
+// TODO     Teleportation by digging into soft ground
+// TODO     Add sprite sheet animation
+// TODO     Eating mushrooms gives you power ups but makes the frog more paranoid
+// TODO     Paranoia intensifies the horror elements (Maybe add eye sprited that open as it increases)
 
 // TODO visual fx
-// TODO     add screen shake
-// TODO     add random particles
+// TODO     Add campfire with fire embers shader
+// TODO     Add screen shake
+// TODO     Add random particles
 // TODO     3D color split shader
-// TODO     make water a fullscreen shader and only control surface height
+// TODO     Make water a fullscreen shader and only control surface height
+// TODO     Rain
+// TODO     Parallax background
+// TODO     Optimize spritesheet animations to cache them as a resource
 
 // TODO developer tools
 // TODO     Make the game hot reloadable to change configs during development
@@ -35,8 +46,8 @@ use bevy::prelude::*;
 // TODO world editor
 // TODO     Selectable menu with different types of tiles you can place
 // TODO     Make it snap to the grid of the world
-// TODO     Save it to some kind of file that can be opened and edited
 // TODO     Somehow bunch colliders of tiles together
+// TODO     Make shaders placeable and make them cover a said size
 
 #[derive(Clone, Copy, Default, Eq, PartialEq, Debug, Hash, States)]
 pub enum GameState {
@@ -51,10 +62,11 @@ fn main() {
         .add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()))
         .init_state::<GameState>()
         .add_plugins((
+            AssetLoaderPlugin,
             MenuPlugin,
             EditorPlugin,
-            EffectsPlugin,
             GameplayPlugin,
+            GraphicsPlugin,
             HUDPlugin,
         ))
         .run();

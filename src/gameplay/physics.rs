@@ -48,7 +48,7 @@ impl Default for Rigidbody {
     fn default() -> Self {
         Self {
             mass: 1.0,
-            size: Vec2::new(20.0, 20.0),
+            size: Vec2::new(16.0, 16.0),
 
             moveable: true,
             velocity: Vec2::ZERO,
@@ -145,7 +145,7 @@ fn check_collisions(
 ) {
     let mut combinations = query.iter_combinations_mut();
 
-    while let Some([(ent_a, mut t_a, mut rb_a), (_ent_b, mut t_b, mut rb_b)]) = combinations.fetch_next() {
+    while let Some([(ent_a, mut t_a, mut rb_a), (ent_b, mut t_b, mut rb_b)]) = combinations.fetch_next() {
         if !rb_a.moveable && !rb_b.moveable {
             continue;
         }
@@ -197,6 +197,9 @@ fn check_collisions(
             }
 
             if let Ok(mut frog) = frogs.get_mut(ent_a) {
+                frog.grounded = true;
+            }
+            if let Ok(mut frog) = frogs.get_mut(ent_b) {
                 frog.grounded = true;
             }
         }

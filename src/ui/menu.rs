@@ -17,7 +17,6 @@ impl Plugin for MenuPlugin {
 enum MenuState {
     #[default]
     Main,
-    Settings,
     Disabled,
 }
 
@@ -30,13 +29,12 @@ enum MenuButtonAction {
 
 fn menu_setup (
     mut commands: Commands,
-    asset_server: Res<AssetServer>
 ) {
     commands.spawn((
         DespawnOnExit(MenuState::Main),
         Camera2d,
     ));
-    
+
     commands.spawn((
         DespawnOnExit(MenuState::Main),
         Node {

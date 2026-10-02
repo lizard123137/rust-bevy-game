@@ -1,15 +1,11 @@
 use bevy::{
-    camera::visibility::RenderLayers,
     color::palettes::css::*,
-    core_pipeline::tonemapping::{DebandDither, Tonemapping},
     input::common_conditions::*,
-    post_process::bloom::Bloom,
     prelude::*,
     window::PrimaryWindow,
 };
 
 use crate::GameState;
-use crate::effects::lofi::LofiEffect;
 use crate::gameplay::physics::Rigidbody;
 
 pub struct PlayerPlugin;
@@ -20,7 +16,6 @@ pub fn frog_tongue_active(query: Query<&Frog>) -> bool {
 
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(OnEnter(GameState::Game), spawn_player);
         app.add_systems(Update, (
             update_target
                 .run_if(in_state(GameState::Game))
@@ -60,46 +55,6 @@ pub struct Frog {
     pub target_pos: Vec2,
     pub tongue_len: f32,
     pub range: f32,
-}
-
-fn spawn_player(
-    mut commands: Commands,
-    asset_server: Res<AssetServer>,
-) {
-    commands.spawn((
-        Rigidbody {
-            size: Vec2::new(14.0, 14.0),
-            ..default()
-        },
-        Frog {
-            grounded: false,
-            tongue_active: false,
-            target_pos: Vec2::new(0.0, 0.0),
-            tongue_len: 0.0,
-            range: 50.0,
-        },
-        Sprite::from_image(asset_server.load("images/frog.png")),
-        Transform::from_xyz(0.0, 50.0, 0.0),
-        children![
-            (
-                Camera2d,
-                Camera {
-                    clear_color: ClearColorConfig::Custom(Color::srgb(0.0, 0.15, 0.3)),
-                    ..default()
-                },
-                LofiEffect::new(2.0, 50.0, Vec2::new(0.125, 10.0)),
-                Tonemapping::TonyMcMapface,
-                Bloom::default(),
-                DebandDither::Enabled,
-                PlayerCamera,
-                RenderLayers::from_layers(&[0, 1]), // scene + water
-                Projection::Orthographic(OrthographicProjection {
-                    scale: 0.25,
-                    ..OrthographicProjection::default_2d()
-                }),
-            )
-        ],
-    ));
 }
 
 fn update_target(

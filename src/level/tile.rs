@@ -10,4 +10,7 @@ pub struct TileRegistry {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct TileDef {
     pub sprite: String,
+
+    #[serde(default)]
+    pub animated: bool,
 }

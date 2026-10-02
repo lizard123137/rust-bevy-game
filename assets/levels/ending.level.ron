@@ -1,11 +1,11 @@
 (
-    name: "Level 1",
-    description: "test level to see if the editor loading works",
+    name: "Ending",
+    description: "you find out you were a frog in captivity having a nightmare",
     objects: [
-        (obj_type: Player, pos: (-50.0, 32.0)),
+        (obj_type: Player, pos: (-50.0, 16.0)),
         
-        (obj_type: Mushroom(kind: Blue), pos: (0.0, 16.0)),
-        (obj_type: Mushroom(kind: Red), pos: (64.0, 64.0)),
+        (obj_type: Mushroom, pos: (0.0, 16.0)),
+        (obj_type: Mushroom, pos: (64.0, 64.0)),
         
         (obj_type: Tile(name: "grass", solid: true), pos: (-96.0, 0.0)),
         (obj_type: Tile(name: "grass", solid: true), pos: (-80.0, 0.0)),
@@ -13,18 +13,17 @@
         (obj_type: Tile(name: "grass", solid: true), pos: (-48.0, 0.0)),
         (obj_type: Tile(name: "grass", solid: true), pos: (-32.0, 0.0)),
         (obj_type: Tile(name: "grass", solid: true), pos: (-16.0, 0.0)),
-        (obj_type: Tile(name: "grass_flat", solid: true), pos: (00.0, 0.0)),
+        (obj_type: Tile(name: "grass", solid: true), pos: (00.0, 0.0)),
         (obj_type: Tile(name: "grass", solid: true), pos: (16.0, 0.0)),
-        (obj_type: Tile(name: "grass_flat", solid: true), pos: (32.0, 0.0)),
+        (obj_type: Tile(name: "grass", solid: true), pos: (32.0, 0.0)),
         (obj_type: Tile(name: "grass", solid: true), pos: (48.0, 0.0)),
-        (obj_type: Tile(name: "grass_flat", solid: true), pos: (64.0, 0.0)),
+        (obj_type: Tile(name: "grass", solid: true), pos: (64.0, 0.0)),
         (obj_type: Tile(name: "grass", solid: true), pos: (80.0, 0.0)),
         
         (obj_type: Tile(name: "grass", solid: true), pos: (48.0, 48.0)),
-        (obj_type: Tile(name: "grass_flat", solid: true), pos: (64.0, 48.0)),
+        (obj_type: Tile(name: "grass", solid: true), pos: (64.0, 48.0)),
         (obj_type: Tile(name: "grass", solid: true), pos: (80.0, 48.0)),
         
         (obj_type: Tile(name: "rock", solid: false), pos: (32.0, 16.0)),
-        (obj_type: Tile(name: "campfire", solid: false), pos: (64.0, 16.0)),
     ],
 )
