@@ -7,6 +7,7 @@ use crate::{
     asset_loader::GameAssets,
     level::{
         mushroom::MushroomType,
+        spawners::shader::ShaderMaterials,
         tile::TileRegistry,
     },
 };
@@ -39,6 +40,8 @@ pub fn spawn_level(
     asset_server: Res<AssetServer>,
     mut texture_atlas_layout: ResMut<Assets<TextureAtlasLayout>>,
     mut commands: Commands,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ShaderMaterials,
     mut done: Local<bool>
 ) {
     if *done { return; }
@@ -62,7 +65,8 @@ pub fn spawn_level(
                     }
                 );
             }
-            ObjectType::Shader {name, size} => continue,
+            // TODO come up with something better than passing shader type as string
+            ObjectType::Shader {name, size} => spawners::spawn_shader(&mut commands, &mut meshes, &mut materials, &asset_server, obj.pos, name, *size),
             ObjectType::Tile {name, solid } => spawners::spawn_tile(&mut commands, &mut texture_atlas_layout, &asset_server, &registry, obj.pos, name, *solid),
             ObjectType::Player => spawners::spawn_player(&mut commands, &asset_server, obj.pos),
         }

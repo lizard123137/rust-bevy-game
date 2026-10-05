@@ -3,6 +3,8 @@
     description: "test level to see if the editor loading works",
     objects: [
         (obj_type: Player, pos: (-50.0, 32.0)),
+
+        (obj_type: Shader(name: "fog", size: (500.0, 100.0)), pos: (0.0, 10.0)),
         
         (obj_type: Mushroom(kind: Blue), pos: (0.0, 16.0)),
         (obj_type: Mushroom(kind: Red), pos: (64.0, 64.0)),
