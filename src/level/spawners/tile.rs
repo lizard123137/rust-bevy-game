@@ -22,9 +22,9 @@ pub fn spawn_tile(
     let mut tile = match &def.animated {
         true => {
             let texture = asset_server.load(&def.sprite);
-            let layout = TextureAtlasLayout::from_grid(UVec2::splat(16), 4, 1, None, None);
+            let layout = TextureAtlasLayout::from_grid(UVec2::splat(16), def.frames as u32, 1, None, None);
             let texture_atlas_layout = texture_atlas_layout.add(layout);
-            let animation_indices = AnimationIndices { first: 0, last: 3 };
+            let animation_indices = AnimationIndices { first: 0, last: &def.frames - 1 };
 
             // TODO right now it creates a separate animation for all occurences
             // TODO cache the animation and reuse it

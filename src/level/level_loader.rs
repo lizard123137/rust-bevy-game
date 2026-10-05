@@ -26,8 +26,9 @@ pub struct ObjectData {
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum ObjectType {
-    Tile {name: String, solid: bool},
     Mushroom {kind: MushroomType},
+    Shader {name: String, size: Vec2},
+    Tile {name: String, solid: bool},
     Player,
 }
 
@@ -48,7 +49,6 @@ pub fn spawn_level(
 
     for obj in &level.objects {
         match &obj.obj_type {
-            ObjectType::Tile {name, solid } => spawners::spawn_tile(&mut commands, &mut texture_atlas_layout, &asset_server, &registry, obj.pos, name, *solid),
             ObjectType::Mushroom {kind} => {
                 let mut m = commands.spawn((
                     Transform::from_xyz(obj.pos.x, obj.pos.y, 1.0),
@@ -62,6 +62,8 @@ pub fn spawn_level(
                     }
                 );
             }
+            ObjectType::Shader {name, size} => continue,
+            ObjectType::Tile {name, solid } => spawners::spawn_tile(&mut commands, &mut texture_atlas_layout, &asset_server, &registry, obj.pos, name, *solid),
             ObjectType::Player => spawners::spawn_player(&mut commands, &asset_server, obj.pos),
         }
     }

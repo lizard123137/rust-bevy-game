@@ -13,4 +13,7 @@ pub struct TileDef {
 
     #[serde(default)]
     pub animated: bool,
+
+    #[serde(default)]
+    pub frames: usize,
 }

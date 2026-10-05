@@ -1,8 +1,10 @@
 (
     tiles: {
-        "campfire": (sprite: "images/tiles/campfire.png", animated: true),
+        "campfire": (sprite: "images/tiles/campfire.png", animated: true, frames: 4),
         "grass": (sprite: "images/tiles/grass.png"),
         "grass_flat": (sprite: "images/tiles/grass_flat.png"),
         "rock": (sprite: "images/tiles/rock.png"),
+        "druid": (sprite: "images/druid.png"),
+        "mark": (sprite: "images/question_mark.png"),
     },
 )

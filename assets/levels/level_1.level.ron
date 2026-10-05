@@ -7,6 +7,13 @@
         (obj_type: Mushroom(kind: Blue), pos: (0.0, 16.0)),
         (obj_type: Mushroom(kind: Red), pos: (64.0, 64.0)),
         
+        (obj_type: Tile(name: "mark", solid: false), pos: (-96.0, 16.0)),
+
+        (obj_type: Tile(name: "grass", solid: true), pos: (-176.0, 0.0)),
+        (obj_type: Tile(name: "grass", solid: true), pos: (-160.0, 0.0)),
+        (obj_type: Tile(name: "grass", solid: true), pos: (-144.0, 0.0)),
+        (obj_type: Tile(name: "grass", solid: true), pos: (-128.0, 0.0)),
+        (obj_type: Tile(name: "grass", solid: true), pos: (-112.0, 0.0)),
         (obj_type: Tile(name: "grass", solid: true), pos: (-96.0, 0.0)),
         (obj_type: Tile(name: "grass", solid: true), pos: (-80.0, 0.0)),
         (obj_type: Tile(name: "grass", solid: true), pos: (-64.0, 0.0)),
@@ -18,7 +25,13 @@
         (obj_type: Tile(name: "grass_flat", solid: true), pos: (32.0, 0.0)),
         (obj_type: Tile(name: "grass", solid: true), pos: (48.0, 0.0)),
         (obj_type: Tile(name: "grass_flat", solid: true), pos: (64.0, 0.0)),
-        (obj_type: Tile(name: "grass", solid: true), pos: (80.0, 0.0)),
+        (obj_type: Tile(name: "grass_flat", solid: true), pos: (80.0, 0.0)),
+        (obj_type: Tile(name: "grass", solid: true), pos: (96.0, 0.0)),
+        (obj_type: Tile(name: "grass", solid: true), pos: (112.0, 0.0)),
+        (obj_type: Tile(name: "grass", solid: true), pos: (128.0, 0.0)),
+        (obj_type: Tile(name: "grass", solid: true), pos: (144.0, 0.0)),
+        (obj_type: Tile(name: "grass", solid: true), pos: (160.0, 0.0)),
+        (obj_type: Tile(name: "grass", solid: true), pos: (176.0, 0.0)),
         
         (obj_type: Tile(name: "grass", solid: true), pos: (48.0, 48.0)),
         (obj_type: Tile(name: "grass_flat", solid: true), pos: (64.0, 48.0)),
@@ -26,5 +39,6 @@
         
         (obj_type: Tile(name: "rock", solid: false), pos: (32.0, 16.0)),
         (obj_type: Tile(name: "campfire", solid: false), pos: (64.0, 16.0)),
+        (obj_type: Tile(name: "druid", solid: false), pos: (80.0, 16.0)),
     ],
 )
