@@ -1,5 +1,8 @@
 (
     tiles: {
+        "brick": (sprite: "images/tiles/brick.png"),
+        "brick_left": (sprite: "images/tiles/brick_left.png"),
+        "brick_right": (sprite: "images/tiles/brick_right.png"),
         "campfire": (sprite: "images/tiles/campfire.png", animated: true, frames: 4),
         "grass": (sprite: "images/tiles/grass.png"),
         "grass_flat": (sprite: "images/tiles/grass_flat.png"),

@@ -21,7 +21,11 @@ pub fn spawn_dialogue(
     }
 
     commands.spawn((
-        Sprite::from_image(asset_server.load(&def.sprite)),
+        Sprite {
+            image: asset_server.load(&def.sprite),
+            color: Color::srgb(3.0, 1.5, 3.0),
+            ..default()
+        },
         Transform::from_xyz(pos.x, pos.y, 0.0),
     ));
 }

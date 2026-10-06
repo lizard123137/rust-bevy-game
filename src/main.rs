@@ -19,12 +19,12 @@ use bevy::prelude::*;
 // TODO     Only grapple to rigidbodies with movable==false
 // TODO     Store collision vector so you cant jump into what you're jumping off of
 // TODO     Controller support (maybe autoaim)
-// TODO     Info type that will show dialogue (? mark for frog monologue, druids and signs)
 // TODO     Talking with druid NPC
 // TODO     Teleportation by digging into soft ground
 // TODO     Add sprite sheet animation
 // TODO     Eating mushrooms gives you power ups but makes the frog more paranoid
 // TODO     Paranoia intensifies the horror elements (Maybe add eye sprites that open as it increases)
+// TODO     Sign dialogue type
 
 // TODO visual fx
 // TODO     Add screen shake
@@ -34,7 +34,6 @@ use bevy::prelude::*;
 // TODO     Rain
 // TODO     Parallax background
 // TODO     Optimize spritesheet animations to cache them as a resource
-// TODO     Add bloom glow to quest givers and monologues
 // TODO     Make fog shader fade with material edges
 
 // TODO developer tools
