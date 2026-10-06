@@ -5,7 +5,7 @@ pub mod shader;
 pub mod item;
 
 pub use dialogue::spawn_dialogue;
-pub use tile::spawn_tile;
+pub use tile::{spawn_tile, spawn_tile_colliders};
 pub use player::spawn_player;
 pub use shader::spawn_shader;
 pub use item::spawn_item;

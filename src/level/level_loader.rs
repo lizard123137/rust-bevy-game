@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use std::collections::HashSet;
 
 use bevy::{
     ecs::system::SystemParam,
@@ -69,15 +70,24 @@ pub fn spawn_level(
         registries.item.get(&assets.items),
     ) else { return };
 
+    let mut solid_cells: HashSet<IVec2> = HashSet::new();
+
     for obj in &level.objects {
         match &obj.obj_type {
             ObjectType::Dialogue {name, sentences} => spawners::spawn_dialogue(&mut commands, &asset_server, &dialogue_registry, obj.pos, name, &sentences),
             // TODO come up with something better than passing shader type as string
             ObjectType::Shader {name, size} => spawners::spawn_shader(&mut commands, &mut meshes, &mut materials, obj.pos, name, *size),
-            ObjectType::Tile {name, solid } => spawners::spawn_tile(&mut commands, &mut texture_atlas_layout, &asset_server, &tile_registry, obj.pos, name, *solid),
+            ObjectType::Tile {name, solid } => {
+                spawners::spawn_tile(&mut commands, &mut texture_atlas_layout, &asset_server, &tile_registry, obj.pos, name);
+                if *solid {
+                    solid_cells.insert((obj.pos / 16.0).round().as_ivec2());
+                }
+            },
             ObjectType::Player => spawners::spawn_player(&mut commands, &asset_server, obj.pos),
             ObjectType::Item {name} => spawners::spawn_item(&mut commands, &asset_server, &item_registry, obj.pos, name),
         }
     }
+
+    spawners::spawn_tile_colliders(&mut commands, &solid_cells);
     *done = true;
 }

@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use std::collections::HashSet;                
 use crate::{
     gameplay::physics::Rigidbody,
     graphics::animation::{AnimationIndices, AnimationTimer},
@@ -12,14 +13,13 @@ pub fn spawn_tile(
     registry: &TileRegistry,
     pos: Vec2,
     name: &str,
-    solid: bool
 ) {
     let Some(def) = registry.get(name) else {
         warn!("level references unknown tile '{name}'");
         return;
     };
 
-    let mut tile = match &def.animated {
+    match &def.animated {
         true => {
             let texture = asset_server.load(&def.sprite);
             let layout = TextureAtlasLayout::from_grid(UVec2::splat(16), def.frames as u32, 1, None, None);
@@ -48,12 +48,54 @@ pub fn spawn_tile(
             ))
         }
     };
-                
-    if solid {
-        tile.insert(Rigidbody {
-            size: Vec2::new(14.0, 14.0),
-            moveable: false,
-            ..default()
-        });
+}
+
+pub fn spawn_tile_colliders(
+    commands: &mut Commands,
+    cells: &HashSet<IVec2>,
+) {
+    let mut remaining = cells.clone();
+
+    let mut order: Vec<IVec2> = cells.iter().copied().collect();
+    order.sort_by_key(|c| (c.y, c.x));
+
+    for start in order {
+        if !remaining.contains(&start) {
+            continue;
+        }
+
+        let mut width = 1;
+        while remaining.contains(&(start + IVec2::new(width, 0))) {
+            width += 1;
+        }
+
+        let mut height = 1;
+        'grow: loop {
+            for x in 0..width {
+                if !remaining.contains(&(start + IVec2::new(x, height))) {
+                    break 'grow;
+                }
+            }
+            height += 1;
+        }
+
+        for y in 0..height {
+            for x in 0..width {
+                remaining.remove(&(start + IVec2::new(x, y)));
+            }
+        }
+
+        let cells_size = Vec2::new(width as f32, height as f32);
+        let center = (start.as_vec2() + (cells_size - 1.0) / 2.0) * 16.0;
+        let size = cells_size * 16.0 - 2.0;
+
+        commands.spawn((
+            Transform::from_xyz(center.x, center.y, 0.0),
+            Rigidbody {
+                size: size,
+                moveable: false,
+                ..default()
+            },
+        ));
     }
 }

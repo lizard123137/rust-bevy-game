@@ -1,4 +1,5 @@
 mod asset_loader;
+mod audio;
 mod editor;
 mod gameplay;
 mod graphics;
@@ -6,6 +7,7 @@ mod level;
 mod ui;
 
 use crate::asset_loader::AssetLoaderPlugin;
+use crate::audio::AudioPlugin;
 use crate::editor::EditorPlugin;
 use crate::gameplay::GameplayPlugin;
 use crate::graphics::GraphicsPlugin;
@@ -25,6 +27,12 @@ use bevy::prelude::*;
 // TODO     Eating mushrooms gives you power ups but makes the frog more paranoid
 // TODO     Paranoia intensifies the horror elements (Maybe add eye sprites that open as it increases)
 // TODO     Sign dialogue type
+
+// TODO audio
+// TODO     Make a system where sfx can be assigned to events
+// TODO     Map SFX to events through RON
+// TODO     Add atmospheric sounds when frog is paranoid
+// TODO     Maybe switch to .ogg from .wav
 
 // TODO visual fx
 // TODO     Add screen shake
@@ -46,7 +54,6 @@ use bevy::prelude::*;
 // TODO world editor
 // TODO     Selectable menu with different types of tiles you can place
 // TODO     Make it snap to the grid of the world
-// TODO     Somehow bunch colliders of tiles together
 
 #[derive(Clone, Copy, Default, Eq, PartialEq, Debug, Hash, States)]
 pub enum GameState {
@@ -62,6 +69,7 @@ fn main() {
         .init_state::<GameState>()
         .add_plugins((
             AssetLoaderPlugin,
+            AudioPlugin,
             MenuPlugin,
             EditorPlugin,
             GameplayPlugin,

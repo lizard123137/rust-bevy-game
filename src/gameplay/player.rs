@@ -5,6 +5,7 @@ use bevy::{
     window::PrimaryWindow,
 };
 
+use crate::audio::PlaySound;
 use crate::GameState;
 use crate::gameplay::physics::Rigidbody;
 
@@ -106,7 +107,10 @@ fn update_orientation(query: Single<(&mut Sprite, &Rigidbody), With<Frog>>) {
     }
 }
 
-fn activate_jump(query: Single<(&mut Rigidbody, &Transform, &mut Frog)>) {
+fn activate_jump(
+    query: Single<(&mut Rigidbody, &Transform, &mut Frog)>,
+    mut commands: Commands,
+) {
     let (mut rb, t, mut frog) = query.into_inner();
 
     if !frog.grounded {
@@ -120,7 +124,8 @@ fn activate_jump(query: Single<(&mut Rigidbody, &Transform, &mut Frog)>) {
     let jump_strength = magnitude.clamp(0.0, frog.range);
 
     rb.force += direction * jump_strength * 200.0;
-    
+
+    commands.trigger(PlaySound { name: "jump".to_string() });
     frog.grounded = false;
 }
 
@@ -169,6 +174,8 @@ fn activate_tongue(
             },
         )
     );
+
+    commands.trigger(PlaySound { name: "grapple".to_string() });
 }
 
 fn deactivate_tongue(
