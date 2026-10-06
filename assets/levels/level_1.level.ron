@@ -8,8 +8,6 @@
         
         (obj_type: Item(name: "mushroom_blue"), pos: (0.0, 16.0)),
         (obj_type: Item(name: "mushroom_red"), pos: (64.0, 64.0)),
-        
-        (obj_type: Tile(name: "mark", solid: false), pos: (-96.0, 16.0)),
 
         (obj_type: Tile(name: "grass", solid: true), pos: (-176.0, 0.0)),
         (obj_type: Tile(name: "grass", solid: true), pos: (-160.0, 0.0)),
@@ -44,6 +42,7 @@
         (obj_type: Tile(name: "campfire", solid: false), pos: (64.0, 16.0)),
         (obj_type: Shader(name: "fire", size: (8.0, 32.0)), pos: (64.0, 24.0)),
         
-        (obj_type: Tile(name: "druid", solid: false), pos: (80.0, 16.0)),
+        (obj_type: Dialogue(name: "mark", sentences: []), pos: (-96.0, 16.0)),
+        (obj_type: Dialogue(name: "druid", sentences: ["I am lost...", "It's so dark!"]), pos: (80.0, 16.0)),
     ],
 )

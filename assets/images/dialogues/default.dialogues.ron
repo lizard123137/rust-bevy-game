@@ -1,0 +1,6 @@
+(
+    dialogues: {
+        "druid": (sprite: "images/dialogues/druid.png"),
+        "mark": (sprite: "images/dialogues/question_mark.png"),
+    },
+)
