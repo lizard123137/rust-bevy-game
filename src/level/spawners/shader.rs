@@ -4,9 +4,9 @@ use bevy::{
     prelude::*
 };
 
-use crate::graphics::effects::{
-    fog::FogMaterial,
-    fire::FireMaterial,
+use crate::graphics::effects::material_shaders::{
+    FogMaterial,
+    FireMaterial,
 };
 
 #[derive(SystemParam)]
@@ -20,7 +20,6 @@ pub fn spawn_shader(
     commands: &mut Commands,
     meshes: &mut Assets<Mesh>,
     materials: &mut ShaderMaterials,
-    asset_server: &AssetServer,
     pos: Vec2,
     name: &str,
     size: Vec2,

@@ -1,6 +1,5 @@
-pub mod fog;
-pub mod fire;
 pub mod lofi;
+pub mod material_shaders;
 pub mod water;
 pub mod vignette;
 
@@ -20,9 +19,8 @@ impl Plugin for EffectsPlugin {
         load_internal_asset!(app, NOISE_SHADER_HANDLE, "../../../assets/shaders/noise.wgsl", Shader::from_wgsl);
 
         app.add_plugins((
-            fog::FogPlugin,
-            fire::FirePlugin,
             lofi::LofiPlugin,
+            material_shaders::MaterialShadersPlugin,
             water::WaterPlugin,
             vignette::VignettePlugin,
         ));
