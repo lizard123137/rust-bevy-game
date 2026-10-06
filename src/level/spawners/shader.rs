@@ -4,12 +4,15 @@ use bevy::{
     prelude::*
 };
 
-use crate::graphics::effects::fog::FogMaterial;
+use crate::graphics::effects::{
+    fog::FogMaterial,
+    fire::FireMaterial,
+};
 
 #[derive(SystemParam)]
 pub struct ShaderMaterials<'w> {
     pub fog: ResMut<'w, Assets<FogMaterial>>,
-    // pub fire: ResMut<'w, Assets<FireMaterial>>,
+    pub fire: ResMut<'w, Assets<FireMaterial>>,
     // pub water: ResMut<'w, Assets<WaterMaterial>>,
 }
 
@@ -31,6 +34,9 @@ pub fn spawn_shader(
     match name {
         "fog" => {
             entity.insert(MeshMaterial2d(materials.fog.add(FogMaterial {})));
+        }
+        "fire" => {
+            entity.insert(MeshMaterial2d(materials.fire.add(FireMaterial {})));
         }
         _ => {
             warn!("Unknown material '{name}'");

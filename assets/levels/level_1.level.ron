@@ -40,7 +40,10 @@
         (obj_type: Tile(name: "grass", solid: true), pos: (80.0, 48.0)),
         
         (obj_type: Tile(name: "rock", solid: false), pos: (32.0, 16.0)),
+
         (obj_type: Tile(name: "campfire", solid: false), pos: (64.0, 16.0)),
+        (obj_type: Shader(name: "fire", size: (8.0, 32.0)), pos: (64.0, 24.0)),
+        
         (obj_type: Tile(name: "druid", solid: false), pos: (80.0, 16.0)),
     ],
 )

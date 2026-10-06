@@ -1,4 +1,5 @@
 pub mod fog;
+pub mod fire;
 pub mod lofi;
 pub mod water;
 pub mod vignette;
@@ -20,6 +21,7 @@ impl Plugin for EffectsPlugin {
 
         app.add_plugins((
             fog::FogPlugin,
+            fire::FirePlugin,
             lofi::LofiPlugin,
             water::WaterPlugin,
             vignette::VignettePlugin,

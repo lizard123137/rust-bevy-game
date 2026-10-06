@@ -37,6 +37,7 @@ use bevy::prelude::*;
 // TODO     Optimize spritesheet animations to cache them as a resource
 // TODO     Add bloom glow to quest givers and monologues
 // TODO     Make fog shader fade with material edges
+// TODO     Combine shader material definitions into single file
 
 // TODO developer tools
 // TODO     Make the game hot reloadable to change configs during development
