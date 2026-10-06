@@ -1,0 +1,7 @@
+(
+    items: {
+        "mushroom_blue": (sprite: "images/items/mushroom_blue.png"),
+        "mushroom_brown": (sprite: "images/items/mushroom_brown.png"),
+        "mushroom_red": (sprite: "images/items/mushroom_red.png"),
+    },
+)

@@ -4,7 +4,7 @@ use std::collections::HashMap;
 
 #[derive(Asset, TypePath, Serialize, Deserialize, Debug, Clone)]
 pub struct TileRegistry {
-    pub tiles: HashMap<String, TileDef>,
+    pub tiles: HashMap<String, TileDef>
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -16,4 +16,10 @@ pub struct TileDef {
 
     #[serde(default)]
     pub frames: usize,
+}
+
+impl TileRegistry {
+    pub fn get(&self, name: &str) -> Option<&TileDef> {
+        self.tiles.get(name)
+    }
 }

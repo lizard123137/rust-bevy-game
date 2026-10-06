@@ -24,10 +24,9 @@ use bevy::prelude::*;
 // TODO     Teleportation by digging into soft ground
 // TODO     Add sprite sheet animation
 // TODO     Eating mushrooms gives you power ups but makes the frog more paranoid
-// TODO     Paranoia intensifies the horror elements (Maybe add eye sprited that open as it increases)
+// TODO     Paranoia intensifies the horror elements (Maybe add eye sprites that open as it increases)
 
 // TODO visual fx
-// TODO     Add campfire with fire embers shader
 // TODO     Add screen shake
 // TODO     Add random particles
 // TODO     3D color split shader
@@ -50,7 +49,6 @@ use bevy::prelude::*;
 // TODO     Selectable menu with different types of tiles you can place
 // TODO     Make it snap to the grid of the world
 // TODO     Somehow bunch colliders of tiles together
-// TODO     Make shaders placeable and make them cover a said size
 
 #[derive(Clone, Copy, Default, Eq, PartialEq, Debug, Hash, States)]
 pub enum GameState {

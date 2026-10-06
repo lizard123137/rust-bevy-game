@@ -14,7 +14,7 @@ pub fn spawn_tile(
     name: &str,
     solid: bool
 ) {
-    let Some(def) = registry.tiles.get(name) else {
+    let Some(def) = registry.get(name) else {
         warn!("level references unknown tile '{name}'");
         return;
     };

@@ -6,8 +6,8 @@
 
         (obj_type: Shader(name: "fog", size: (500.0, 100.0)), pos: (0.0, 10.0)),
         
-        (obj_type: Mushroom(kind: Blue), pos: (0.0, 16.0)),
-        (obj_type: Mushroom(kind: Red), pos: (64.0, 64.0)),
+        (obj_type: Item(name: "mushroom_blue"), pos: (0.0, 16.0)),
+        (obj_type: Item(name: "mushroom_red"), pos: (64.0, 64.0)),
         
         (obj_type: Tile(name: "mark", solid: false), pos: (-96.0, 16.0)),
 
