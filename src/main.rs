@@ -29,6 +29,7 @@ use bevy::prelude::*;
 // TODO     Sign dialogue type
 // TODO     Use a spatial hash grid for collisions and implement ray casting
 // TODO     Somehow order systems to run in a way that makes sense
+// TODO     Snap objects to 16px grid before spawning (right now they are offset by 8px)
 
 // TODO audio
 // TODO     Make a system where sfx can be assigned to events

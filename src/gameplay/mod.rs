@@ -4,7 +4,6 @@ pub mod spatial_hash_grid;
 
 use bevy::prelude::*;
 use crate::{
-    asset_loader::GameAssets,
     level::level_loader,
     GameState,
 };
