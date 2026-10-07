@@ -27,6 +27,8 @@ use bevy::prelude::*;
 // TODO     Eating mushrooms gives you power ups but makes the frog more paranoid
 // TODO     Paranoia intensifies the horror elements (Maybe add eye sprites that open as it increases)
 // TODO     Sign dialogue type
+// TODO     Use a spatial hash grid for collisions and implement ray casting
+// TODO     Somehow order systems to run in a way that makes sense
 
 // TODO audio
 // TODO     Make a system where sfx can be assigned to events

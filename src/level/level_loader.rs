@@ -55,9 +55,7 @@ pub fn spawn_level(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ShaderMaterials,
-    mut done: Local<bool>
 ) {
-    if *done { return; }
     let (
         Some(level),
         Some(dialogue_registry),
@@ -89,5 +87,4 @@ pub fn spawn_level(
     }
 
     spawners::spawn_tile_colliders(&mut commands, &solid_cells);
-    *done = true;
 }

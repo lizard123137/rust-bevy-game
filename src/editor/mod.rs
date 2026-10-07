@@ -14,11 +14,9 @@ impl Plugin for EditorPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(OnEnter(GameState::Editor), (
             spawn_camera,
+            level_loader::spawn_level,
         ));
         app.add_systems(Update, (
-            level_loader::spawn_level
-                .run_if(in_state(GameState::Editor))
-                .run_if(resource_exists::<GameAssets>),
             camera_zoom
                 .run_if(in_state(GameState::Editor)),
         ));

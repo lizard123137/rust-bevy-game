@@ -1,13 +1,11 @@
 use bevy::prelude::*;
 use bevy_common_assets::ron::RonAssetPlugin;
 
-use crate::{
-    level::{
+use crate::level::{
         level_loader::LevelData,
         dialogue::DialogueRegistry,
         tile::TileRegistry,
         item::ItemRegistry,
-    },
 };
 
 pub struct AssetLoaderPlugin;
