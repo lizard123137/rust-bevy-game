@@ -23,13 +23,12 @@ use bevy::prelude::*;
 // TODO     Controller support (maybe autoaim)
 // TODO     Talking with druid NPC
 // TODO     Teleportation by digging into soft ground
-// TODO     Add sprite sheet animation
 // TODO     Eating mushrooms gives you power ups but makes the frog more paranoid
 // TODO     Paranoia intensifies the horror elements (Maybe add eye sprites that open as it increases)
 // TODO     Sign dialogue type
-// TODO     Use a spatial hash grid for collisions and implement ray casting
 // TODO     Somehow order systems to run in a way that makes sense
 // TODO     Snap objects to 16px grid before spawning (right now they are offset by 8px)
+// TODO     Implement raycasting
 
 // TODO audio
 // TODO     Make a system where sfx can be assigned to events
@@ -46,6 +45,7 @@ use bevy::prelude::*;
 // TODO     Parallax background
 // TODO     Optimize spritesheet animations to cache them as a resource
 // TODO     Make fog shader fade with material edges
+// TODO     Add sprite sheet animation
 
 // TODO developer tools
 // TODO     Make the game hot reloadable to change configs during development

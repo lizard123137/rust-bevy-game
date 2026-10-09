@@ -4,10 +4,18 @@ use bevy::{
     prelude::*,
 };
 
-use crate::GameState;
-use crate::gameplay::player::{
-    Frog,
-    frog_tongue_active,
+use crate::{
+    GameState,
+    gameplay::{
+        player::{
+            Frog,
+            frog_tongue_active,
+        },
+        spatial_hash_grid::{
+            CELL_SIZE,
+            SpatialHashGrid,
+        },
+    },
 };
 
 pub struct PhysicsPlugin;
@@ -140,67 +148,96 @@ fn apply_tongue_forces(
 }
 
 fn check_collisions(
+    grid: Res<SpatialHashGrid>,
     mut query: Query<(Entity, &mut Transform, &mut Rigidbody)>,
     mut frogs: Query<&mut Frog>,
 ) {
-    let mut combinations = query.iter_combinations_mut();
-
-    while let Some([(ent_a, mut t_a, mut rb_a), (ent_b, mut t_b, mut rb_b)]) = combinations.fetch_next() {
-        if !rb_a.moveable && !rb_b.moveable {
-            continue;
-        }
-
-        let aabb_a = Aabb2d::new(t_a.translation.truncate(), rb_a.size / 2.0);
-        let aabb_b = Aabb2d::new(t_b.translation.truncate(), rb_b.size / 2.0);
-
-        if aabb_a.intersects(&aabb_b) {
-            let a_hs = aabb_a.half_size();
-            let a_ctr = aabb_a.center();
-            let b_hs = aabb_b.half_size();
-            let b_ctr = aabb_b.center();
-
-            let overlap_x = (a_hs.x + b_hs.x) - (a_ctr.x - b_ctr.x).abs();
-            let overlap_y = (a_hs.y + b_hs.y) - (a_ctr.y - b_ctr.y).abs();
-
-            if overlap_x < overlap_y {
-                let sign = if a_ctr.x < b_ctr.x { -1.0 } else { 1.0 };
-                let push = Vec3::new(overlap_x * sign, 0.0, 0.0);
-
-                if rb_a.moveable && !rb_b.moveable {
-                    t_a.translation += push;
-                    rb_a.velocity.x = 0.0;
-                } else if !rb_a.moveable && rb_b.moveable {
-                    t_b.translation -= push;
-                    rb_b.velocity.x = 0.0;
-                } else {
-                    t_a.translation += push * 0.5;
-                    t_b.translation -= push * 0.5;
-                    rb_a.velocity.x = 0.0;
-                    rb_b.velocity.x = 0.0;
-                }
+    let moveable_entities: Vec<(Entity, Vec2, Vec2)> = query
+        .iter()
+        .filter_map(|(ent, t, rb)| {
+            if rb.moveable {
+                Some((ent, t.translation.truncate(), rb.size))
             } else {
-                let sign = if a_ctr.y < b_ctr.y { -1.0 } else { 1.0 };
-                let push = Vec3::new(0.0, overlap_y * sign, 0.0);
-                
-                if rb_a.moveable && !rb_b.moveable {
-                    t_a.translation += push;
-                    rb_a.velocity.y = 0.0
-                } else if !rb_a.moveable && rb_b.moveable {
-                    t_b.translation -= push;
-                    rb_b.velocity.y = 0.0;
-                } else {
-                    t_a.translation += push * 0.5;
-                    t_b.translation -= push * 0.5;
-                    rb_a.velocity.y = 0.0;
-                    rb_b.velocity.y = 0.0;
-                }
+                None
             }
+        })
+        .collect();
 
-            if let Ok(mut frog) = frogs.get_mut(ent_a) {
-                frog.grounded = true;
+    for (ent_a, pos_a, size_a) in moveable_entities {
+        let entities_in_range = grid.get_entities_in_range(
+            pos_a,
+            size_a,
+            CELL_SIZE / 4.0,
+        );
+
+        for ent_b in entities_in_range {
+            if ent_a == ent_b {
+                continue;
             }
-            if let Ok(mut frog) = frogs.get_mut(ent_b) {
-                frog.grounded = true;
+        
+            if let Ok([(ent_a, mut t_a, mut rb_a), (ent_b, mut t_b, mut rb_b)]) = query.get_many_mut([ent_a, ent_b]) {
+                if !rb_a.moveable && !rb_b.moveable {
+                    continue;
+                }
+                
+                // Avoid double checking pairs of moveable entities
+                if rb_a.moveable && rb_b.moveable && ent_a > ent_b {
+                    continue;
+                }
+                
+                let aabb_a = Aabb2d::new(t_a.translation.truncate(), rb_a.size / 2.0);
+                let aabb_b = Aabb2d::new(t_b.translation.truncate(), rb_b.size / 2.0);
+
+                if aabb_a.intersects(&aabb_b) {
+                    let a_hs = aabb_a.half_size();
+                    let a_ctr = aabb_a.center();
+                    let b_hs = aabb_b.half_size();
+                    let b_ctr = aabb_b.center();
+
+                    let overlap_x = (a_hs.x + b_hs.x) - (a_ctr.x - b_ctr.x).abs();
+                    let overlap_y = (a_hs.y + b_hs.y) - (a_ctr.y - b_ctr.y).abs();
+
+                    if overlap_x < overlap_y {
+                        let sign = if a_ctr.x < b_ctr.x { -1.0 } else { 1.0 };
+                        let push = Vec3::new(overlap_x * sign, 0.0, 0.0);
+
+                        if rb_a.moveable && !rb_b.moveable {
+                            t_a.translation += push;
+                            rb_a.velocity.x = 0.0;
+                        } else if !rb_a.moveable && rb_b.moveable {
+                            t_b.translation -= push;
+                            rb_b.velocity.x = 0.0;
+                        } else {
+                            t_a.translation += push * 0.5;
+                            t_b.translation -= push * 0.5;
+                            rb_a.velocity.x = 0.0;
+                            rb_b.velocity.x = 0.0;
+                        }
+                    } else {
+                        let sign = if a_ctr.y < b_ctr.y { -1.0 } else { 1.0 };
+                        let push = Vec3::new(0.0, overlap_y * sign, 0.0);
+                        
+                        if rb_a.moveable && !rb_b.moveable {
+                            t_a.translation += push;
+                            rb_a.velocity.y = 0.0
+                        } else if !rb_a.moveable && rb_b.moveable {
+                            t_b.translation -= push;
+                            rb_b.velocity.y = 0.0;
+                        } else {
+                            t_a.translation += push * 0.5;
+                            t_b.translation -= push * 0.5;
+                            rb_a.velocity.y = 0.0;
+                            rb_b.velocity.y = 0.0;
+                        }
+                    }
+
+                    if let Ok(mut frog) = frogs.get_mut(ent_a) {
+                        frog.grounded = true;
+                    }
+                    if let Ok(mut frog) = frogs.get_mut(ent_b) {
+                        frog.grounded = true;
+                    }
+                }
             }
         }
     }

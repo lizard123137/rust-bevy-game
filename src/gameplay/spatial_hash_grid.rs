@@ -10,7 +10,7 @@ use crate::gameplay::{
     physics::Rigidbody,
 };
 
-const CELL_SIZE: f32 = 64.0;
+pub const CELL_SIZE: f32 = 64.0;
 
 #[derive(Resource)]
 pub struct SpatialHashGrid {
@@ -103,7 +103,7 @@ impl SpatialHashGrid {
     }
 
     pub fn get_entities_in_range(
-        &mut self,
+        &self,
         pos: Vec2,
         size: Vec2,
         range: f32,
@@ -119,7 +119,6 @@ impl SpatialHashGrid {
 
         entities_in_range
     }
-
 
     pub fn get_cells_in_range(
         &self,
@@ -144,7 +143,7 @@ impl SpatialHashGrid {
         let mut cells_in_range = HashSet::new();
 
         for x in (x_start..=x_end).step_by(STEP).map(|i| i as f32 / SCALE) {
-            for y in (-y_start..=y_end).step_by(STEP).map(|i| i as f32 / SCALE) {
+            for y in (y_start..=y_end).step_by(STEP).map(|i| i as f32 / SCALE) {
                 cells_in_range.insert(IVec2::new(
                     (x / CELL_SIZE).floor() as i32,
                     (y / CELL_SIZE).floor() as i32
