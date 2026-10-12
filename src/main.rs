@@ -47,8 +47,9 @@ use bevy::prelude::*;
 // TODO     Make fog shader fade with material edges
 // TODO     Add sprite sheet animation
 
-// TODO developer tools
+// TODO developer tools / code improvements
 // TODO     Make the game hot reloadable to change configs during development
+// TODO     Refactor physics engine into multiple files
 
 // TODO tree generator
 // TODO     Make trees generate randomly from files that describe their structure

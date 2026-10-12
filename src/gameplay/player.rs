@@ -147,7 +147,6 @@ fn activate_tongue(
     mut sprite: Single<&mut Sprite, With<Frog>>,
     transform: Single<&Transform, With<Frog>>,
     query: Query<(Entity, &Transform, &Rigidbody)>,
-    mut gizmos: Gizmos,
     grid: Res<SpatialHashGrid>,
 ) {
     frog.tongue_active = true;
@@ -161,7 +160,9 @@ fn activate_tongue(
         .distance(target_transform.translation);
 
     let middle = (transform.translation + target_transform.translation) / 2.0;
-    let direction = target_transform.translation - transform.translation;
+    let direction = (target_transform.translation - transform.translation)
+        .truncate()
+        .normalize_or_zero();
     let angle = direction.y.atan2(direction.x);
 
     let tongue = meshes.add(Rectangle::new(distance, 2.0));
@@ -188,11 +189,10 @@ fn activate_tongue(
 
     // Draw lines in range
     ray_get_collision_points_in_range(
-        &mut gizmos,
         &grid,
         transform.translation.truncate(),
-        direction.truncate(),
-        16.0,
+        direction,
+        64.0,
         &query
     );
 }

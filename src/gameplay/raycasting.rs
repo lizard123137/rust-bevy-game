@@ -9,7 +9,6 @@ use crate::gameplay::{
 };
 
 pub fn ray_get_collision_points_in_range(
-    gizmos: &mut Gizmos,
     grid: &SpatialHashGrid,
     origin: Vec2,
     direction: Vec2,
@@ -17,6 +16,9 @@ pub fn ray_get_collision_points_in_range(
     query: &Query<(Entity, &Transform, &Rigidbody)>,
 ) -> Vec<Vec2> {
     // Calculate ray general line form
+    let ray_end = origin + range * direction;
+    let ray_segment = ray_end - origin;
+
     let ray_a = direction.y;
     let ray_b = -direction.x;
     let ray_c = direction.x * origin.y - direction.y * origin.x;
@@ -62,19 +64,16 @@ pub fn ray_get_collision_points_in_range(
             let wall_b = wall.1.x - wall.0.x;
             let wall_c = wall.0.x * wall.1.y - wall.1.x * wall.0.y;
 
-            gizmos.line_2d(wall.0, wall.1, GREEN);
-
             // Calculate the intersection
             let denominator = ray_a * wall_b - wall_a * ray_b;
             
             if denominator.abs() < 1e-5 {
-                return None; // Lines will never cross (almost parallel)
+                return None; // Line crossing point doesn't exist / is too far away (almost parallel)
             }
 
             let x = (ray_b * wall_c - wall_b * ray_c) / denominator;
             let y = (ray_c * wall_a - wall_c * ray_a) / denominator;
             let hit = Vec2::new(x, y);
-
 
             // Check if intersection is within wall
             let wall_len = wall.1 - wall.0;
@@ -84,10 +83,13 @@ pub fn ray_get_collision_points_in_range(
                 return None; // Hit was outside of the wall
             }
 
-            gizmos.circle_2d(hit, 1.0, RED);
-
             // Check if intersection is within range
-            // TODO
+            let ray_t = (hit - origin).dot(ray_segment) / ray_segment.length_squared();
+            
+            if !(0.0..=1.0).contains(&ray_t) {
+                return None; // Hit was outside of ray range
+            }
+            
             Some(hit)
         })
         .collect()
