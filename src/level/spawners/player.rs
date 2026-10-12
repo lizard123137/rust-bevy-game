@@ -16,7 +16,7 @@ use crate::{
 pub fn spawn_player(
     commands: &mut Commands,
     asset_server: &AssetServer,
-    pos: Vec2,
+    pos: Vec3,
 ) {
     commands.spawn((
         Rigidbody::default(),
@@ -28,7 +28,7 @@ pub fn spawn_player(
             range: 50.0,
         },
         Sprite::from_image(asset_server.load("images/frog.png")),
-        Transform::from_xyz(pos.x, pos.y, 0.0),
+        Transform::from_xyz(pos.x, pos.y, pos.z),
         children![
             (
                 Camera2d,

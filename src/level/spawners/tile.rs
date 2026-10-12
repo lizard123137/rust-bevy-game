@@ -11,7 +11,7 @@ pub fn spawn_tile(
     texture_atlas_layout: &mut Assets<TextureAtlasLayout>,
     asset_server: &AssetServer,
     registry: &TileRegistry,
-    pos: Vec2,
+    pos: Vec3,
     name: &str,
 ) {
     let Some(def) = registry.get(name) else {
@@ -44,7 +44,7 @@ pub fn spawn_tile(
         false => {
             commands.spawn((
                 Sprite::from_image(asset_server.load(&def.sprite)),
-                Transform::from_xyz(pos.x, pos.y, 0.0),
+                Transform::from_xyz(pos.x, pos.y, pos.z),
             ))
         }
     };

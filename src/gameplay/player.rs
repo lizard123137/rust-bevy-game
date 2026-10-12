@@ -5,9 +5,15 @@ use bevy::{
     window::PrimaryWindow,
 };
 
-use crate::audio::PlaySound;
-use crate::GameState;
-use crate::gameplay::physics::Rigidbody;
+use crate::{
+    audio::PlaySound,
+    GameState,
+    gameplay::{
+        physics::Rigidbody,
+        raycasting::ray_get_collision_points_in_range,
+        spatial_hash_grid::SpatialHashGrid,
+    },
+};
 
 pub struct PlayerPlugin;
 
@@ -140,6 +146,9 @@ fn activate_tongue(
     mut frog: Single<&mut Frog>,
     mut sprite: Single<&mut Sprite, With<Frog>>,
     transform: Single<&Transform, With<Frog>>,
+    query: Query<(Entity, &Transform, &Rigidbody)>,
+    mut gizmos: Gizmos,
+    grid: Res<SpatialHashGrid>,
 ) {
     frog.tongue_active = true;
 
@@ -176,6 +185,16 @@ fn activate_tongue(
     );
 
     commands.trigger(PlaySound { name: "grapple".to_string() });
+
+    // Draw lines in range
+    ray_get_collision_points_in_range(
+        &mut gizmos,
+        &grid,
+        transform.translation.truncate(),
+        direction.truncate(),
+        16.0,
+        &query
+    );
 }
 
 fn deactivate_tongue(

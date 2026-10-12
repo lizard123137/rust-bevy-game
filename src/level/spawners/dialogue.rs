@@ -7,7 +7,7 @@ pub fn spawn_dialogue(
     commands: &mut Commands,
     asset_server: &AssetServer,
     registry: &DialogueRegistry,
-    pos: Vec2,
+    pos: Vec3,
     name: &str,
     sentences: &Vec<String>
 ) {
@@ -26,6 +26,6 @@ pub fn spawn_dialogue(
             color: Color::srgb(3.0, 1.5, 3.0),
             ..default()
         },
-        Transform::from_xyz(pos.x, pos.y, 0.0),
+        Transform::from_xyz(pos.x, pos.y, pos.z),
     ));
 }

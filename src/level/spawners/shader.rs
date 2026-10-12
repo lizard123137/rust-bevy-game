@@ -20,13 +20,13 @@ pub fn spawn_shader(
     commands: &mut Commands,
     meshes: &mut Assets<Mesh>,
     materials: &mut ShaderMaterials,
-    pos: Vec2,
+    pos: Vec3,
     name: &str,
     size: Vec2,
 ) {
     let mut entity = commands.spawn((
         Mesh2d(meshes.add(Rectangle::new(size.x, size.y))),
-        Transform::from_xyz(pos.x, pos.y, 0.0),
+        Transform::from_xyz(pos.x, pos.y, pos.z),
         RenderLayers::layer(1),
     ));
 

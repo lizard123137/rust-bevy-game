@@ -1,5 +1,6 @@
 pub mod physics;
 pub mod player;
+pub mod raycasting;
 pub mod spatial_hash_grid;
 
 use bevy::prelude::*;

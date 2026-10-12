@@ -27,7 +27,7 @@ pub struct LevelData {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct ObjectData {
     pub obj_type: ObjectType,
-    pub pos: Vec2,
+    pub pos: Vec3,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -78,7 +78,7 @@ pub fn spawn_level(
             ObjectType::Tile {name, solid } => {
                 spawners::spawn_tile(&mut commands, &mut texture_atlas_layout, &asset_server, &tile_registry, obj.pos, name);
                 if *solid {
-                    solid_cells.insert((obj.pos / 16.0).round().as_ivec2());
+                    solid_cells.insert((obj.pos.truncate() / 16.0).round().as_ivec2());
                 }
             },
             ObjectType::Player => spawners::spawn_player(&mut commands, &asset_server, obj.pos),
