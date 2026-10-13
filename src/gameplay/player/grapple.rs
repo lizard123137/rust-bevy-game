@@ -1,5 +1,4 @@
 use bevy::{
-    color::palettes::css::*,
     input::common_conditions::*,
     prelude::*,
     window::PrimaryWindow,
@@ -10,18 +9,19 @@ use crate::{
     GameState,
     gameplay::{
         physics::Rigidbody,
+        player::{
+            frog_tongue_active,
+            Frog,
+            PlayerCamera,
+        },
         raycasting::ray_get_collision_points_in_range,
         spatial_hash_grid::SpatialHashGrid,
     },
 };
 
-pub struct PlayerPlugin;
+pub struct PlayerGrapplePlugin;
 
-pub fn frog_tongue_active(query: Query<&Frog>) -> bool {
-    query.single().map_or(false, |frog| frog.tongue_active)
-}
-
-impl Plugin for PlayerPlugin {
+impl Plugin for PlayerGrapplePlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Update, (
             update_target
@@ -30,14 +30,6 @@ impl Plugin for PlayerPlugin {
             update_tongue
                 .run_if(in_state(GameState::Game))
                 .run_if(frog_tongue_active),
-
-            update_orientation
-                .run_if(in_state(GameState::Game)),
-
-            activate_jump
-                .run_if(in_state(GameState::Game))
-                .run_if(input_just_pressed(MouseButton::Left)),
-
             activate_tongue
                 .run_if(in_state(GameState::Game))
                 .run_if(input_just_pressed(MouseButton::Right)),
@@ -45,23 +37,7 @@ impl Plugin for PlayerPlugin {
                 .run_if(in_state(GameState::Game))
                 .run_if(input_just_released(MouseButton::Right)),
         ));
-        // app.add_systems(FixedUpdate, (
-        //     _debug_player_gizmos,
-        // ));
     }
-}
-
-#[derive(Debug, Component)]
-pub struct PlayerCamera;
-
-#[derive(Debug, Component)]
-pub struct Frog {
-    pub grounded: bool,
-    pub tongue_active: bool,
-
-    pub target_pos: Vec2,
-    pub tongue_len: f32,
-    pub range: f32,
 }
 
 fn update_target(
@@ -103,37 +79,6 @@ fn update_tongue(
     tongue_transform.rotation = Quat::from_rotation_z(angle);
 }
 
-fn update_orientation(query: Single<(&mut Sprite, &Rigidbody), With<Frog>>) {
-    let (mut sprite, rb) = query.into_inner();
-
-    if rb.velocity.x >= 0.0 {
-        sprite.flip_x = false;
-    } else {
-        sprite.flip_x = true;
-    }
-}
-
-fn activate_jump(
-    query: Single<(&mut Rigidbody, &Transform, &mut Frog)>,
-    mut commands: Commands,
-) {
-    let (mut rb, t, mut frog) = query.into_inner();
-
-    if !frog.grounded {
-        return;
-    }
-
-    let mut direction = frog.target_pos - t.translation.truncate();
-    let magnitude = direction.length();
-    direction /= magnitude; // Normalize
-
-    let jump_strength = magnitude.clamp(0.0, frog.range);
-
-    rb.force += direction * jump_strength * 200.0;
-
-    commands.trigger(PlaySound { name: "jump".to_string() });
-    frog.grounded = false;
-}
 
 #[derive(Debug, Component)]
 struct Tongue;
@@ -210,20 +155,5 @@ fn deactivate_tongue(
 
     for entity in query.iter() {
         commands.entity(entity).despawn();
-    }
-}
-
-fn _debug_player_gizmos(
-    mut gizmos: Gizmos,
-    query: Query<(&Transform, &Frog)>
-) {
-    for (transform, frog) in query {
-        // Draw range
-        gizmos
-            .circle_2d(transform.translation.truncate(), frog.range, PURPLE)
-            .resolution(64);
-
-        // Draw target
-        gizmos.line_2d(transform.translation.truncate(), frog.target_pos, PURPLE);
     }
 }
