@@ -122,7 +122,7 @@ fn apply_tongue_forces(
         }
 
         let current_pos = transform.translation.truncate();
-        let offset = current_pos - frog.target_pos;
+        let offset = current_pos - frog.tongue_pos;
         let current_dist = offset.length();
 
         if current_dist < frog.tongue_len {
@@ -141,7 +141,7 @@ fn apply_tongue_forces(
             rb.velocity -= dir * radial_velocity;
         }
 
-        let clamped_pos = frog.target_pos + dir * frog.tongue_len;
+        let clamped_pos = frog.tongue_pos + dir * frog.tongue_len;
         transform.translation.x = clamped_pos.x;
         transform.translation.y = clamped_pos.y;
     }

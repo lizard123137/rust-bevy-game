@@ -10,6 +10,22 @@ use crate::gameplay::{
     physics::Rigidbody,
 };
 
+pub struct SpatialHashGridPlugin;
+
+impl Plugin for SpatialHashGridPlugin {
+    fn build(&self, app: &mut App) {
+        app.init_resource::<SpatialHashGrid>();
+        app.add_systems(OnEnter(GameState::Game),
+            initialize_spatial_hash_grid
+        );
+        app.add_systems(FixedUpdate, (
+            update_spatial_hash_grid.run_if(in_state(GameState::Game)),
+            // _debug_gizmos,
+            // _debug_gizmos_player,
+        ));
+    }
+}
+
 pub const CELL_SIZE: f32 = 64.0;
 
 #[derive(Resource)]
@@ -152,22 +168,6 @@ impl SpatialHashGrid {
         }
 
         cells_in_range
-    }
-}
-
-pub struct SpatialHashGridPlugin;
-
-impl Plugin for SpatialHashGridPlugin {
-    fn build(&self, app: &mut App) {
-        app.init_resource::<SpatialHashGrid>();
-        app.add_systems(OnEnter(GameState::Game),
-            initialize_spatial_hash_grid
-        );
-        app.add_systems(FixedUpdate, (
-            update_spatial_hash_grid.run_if(in_state(GameState::Game)),
-            // _debug_gizmos,
-            _debug_gizmos_player,
-        ));
     }
 }
 

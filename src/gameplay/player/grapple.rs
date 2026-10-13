@@ -14,7 +14,6 @@ use crate::{
                 TongueDestroy,
                 TongueCreate,
             },
-            frog_tongue_active,
             Frog,
             PlayerCamera,
         },
@@ -29,8 +28,7 @@ impl Plugin for PlayerGrapplePlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Update, (
             update_target
-                .run_if(in_state(GameState::Game))
-                .run_if(not(frog_tongue_active)),
+                .run_if(in_state(GameState::Game)),
             activate_tongue
                 .run_if(in_state(GameState::Game))
                 .run_if(input_just_pressed(MouseButton::Right)),
@@ -73,22 +71,32 @@ fn activate_tongue(
     transform: Single<&Transform, With<Frog>>,
     grid: Res<SpatialHashGrid>,
 ) {
-    frog.tongue_active = true;
-    frog.tongue_len = transform.translation
-        .truncate()
-        .distance(frog.target_pos);
+    // Calculate minimum between range and target
+    const MAX_GRAPPLE_RANGE: f32 = 64.0;
 
-    commands.trigger(TongueCreate { origin: transform.translation.truncate(), target: frog.target_pos});
-    commands.trigger(PlaySound { name: "grapple".to_string() });
+    let position = transform.translation.truncate();
+    let direction = frog.target_pos - position;
+    let range = position.distance(frog.target_pos).min(MAX_GRAPPLE_RANGE);
 
-    // Draw lines in range
-    ray_get_collision_points_in_range(
+    // Find closest raycast hit
+    let hits = ray_get_collision_points_in_range(
         &grid,
-        transform.translation.truncate(),
-        (frog.target_pos - transform.translation.truncate()).normalize_or_zero(),
-        64.0,
+        position,
+        direction.normalize_or_zero(),
+        range,
         &query
     );
+    
+    let Some(hit) = hits.first() else {
+        return;
+    };
+
+    frog.tongue_active = true;
+    frog.tongue_pos = *hit;
+    frog.tongue_len = position.distance(*hit);
+
+    commands.trigger(TongueCreate { origin: position, target: *hit});
+    commands.trigger(PlaySound { name: "grapple".to_string() });
 }
 
 fn deactivate_tongue(

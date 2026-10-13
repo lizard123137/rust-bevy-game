@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use itertools::Itertools;
 
 use crate::gameplay::{
     physics::Rigidbody,
@@ -24,8 +25,12 @@ pub fn ray_get_collision_points_in_range(
     let entities = grid.get_entities_in_range(origin, Vec2::ZERO, range);
     let walls: Vec<(Vec2, Vec2)> = entities
         .into_iter()
-        .map(|e| { 
+        .filter_map(|e| { 
             let Ok((_, t, rb)) = query.get(e) else { todo!() };
+
+            if rb.moveable {
+                return None;
+            }
 
             // Change origin from center to bottom left
             let start = t.translation.truncate() - rb.size / 2.0;
@@ -41,12 +46,12 @@ pub fn ray_get_collision_points_in_range(
             let d = start + Vec2::new(0.0, rb.size.y);
 
             // Output the lines of the rectangle
-            vec![
+            Some(vec![
                 (a, b),
                 (b, c),
                 (c, d),
                 (d, a),
-            ]
+            ])
         })
         .into_iter()
         .flatten()
@@ -88,6 +93,12 @@ pub fn ray_get_collision_points_in_range(
             }
             
             Some(hit)
+        })
+        .sorted_by(|a, b| {
+            // Sort by distance from origin
+            let da = a.distance_squared(origin);
+            let db = b.distance_squared(origin);
+            da.total_cmp(&db)
         })
         .collect()
 }

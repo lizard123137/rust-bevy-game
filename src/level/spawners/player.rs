@@ -23,7 +23,8 @@ pub fn spawn_player(
         Frog {
             grounded: false,
             tongue_active: false,
-            target_pos: Vec2::new(0.0, 0.0),
+            target_pos: Vec2::ZERO,
+            tongue_pos: Vec2::ZERO,
             tongue_len: 0.0,
             range: 50.0,
         },

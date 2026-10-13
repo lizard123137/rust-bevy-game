@@ -33,6 +33,8 @@ pub struct Frog {
     pub tongue_active: bool,
 
     pub target_pos: Vec2,
+
+    pub tongue_pos: Vec2,
     pub tongue_len: f32,
     pub range: f32,
 }

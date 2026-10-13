@@ -45,14 +45,11 @@ fn on_tongue_create(
     mut materials: ResMut<Assets<ColorMaterial>>,
     mut sprite: Single<&mut Sprite, With<Frog>>,
 ) {
-    let distance = event.origin
-        .distance(event.target);
-
     let middle = (event.origin + event.target) / 2.0;
     let direction = (event.target - event.origin).normalize_or_zero();
     let angle = direction.y.atan2(direction.x);
 
-    let tongue = meshes.add(Rectangle::new(distance, 2.0));
+    let tongue = meshes.add(Rectangle::new(1.0, 2.0)); // Length will later be updated in update_tongue
     let color = materials.add(Color::srgb(0.2, 0.5, 0.0));     
 
     sprite.image = asset_server.load("images/frog_open.png");
@@ -72,7 +69,7 @@ fn on_tongue_create(
 }
 
 fn on_tongue_destroy(
-    event: On<TongueDestroy>,
+    _event: On<TongueDestroy>,
     asset_server: Res<AssetServer>,
     query: Query<Entity, With<Tongue>>,
     mut commands: Commands,
@@ -91,16 +88,21 @@ fn update_tongue(
 ) {
     let (frog, transform) = *query;
 
+    let distance = transform
+        .translation
+        .truncate()
+        .distance(frog.tongue_pos);
+
     let target_transform = Transform::from_xyz(
-            frog.target_pos.x,
-            frog.target_pos.y,
+            frog.tongue_pos.x,
+            frog.tongue_pos.y,
             0.0);
 
     let middle = (transform.translation + target_transform.translation) / 2.0;
     let direction = target_transform.translation - transform.translation;
     let angle = direction.y.atan2(direction.x);
 
-    // TODO update length
+    tongue_transform.scale.x = distance;
     tongue_transform.translation = middle;
     tongue_transform.rotation = Quat::from_rotation_z(angle);
 }
