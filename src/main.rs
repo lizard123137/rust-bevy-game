@@ -11,8 +11,7 @@ use crate::audio::AudioPlugin;
 use crate::editor::EditorPlugin;
 use crate::gameplay::GameplayPlugin;
 use crate::graphics::GraphicsPlugin;
-use crate::ui::hud::HUDPlugin;
-use crate::ui::menu::MenuPlugin;
+use crate::ui::UIPlugin;
 
 use bevy::prelude::*;
 
@@ -58,7 +57,6 @@ use bevy::prelude::*;
 
 // TODO world editor
 // TODO     Selectable menu with different types of tiles you can place
-// TODO     Make it snap to the grid of the world
 
 #[derive(Clone, Copy, Default, Eq, PartialEq, Debug, Hash, States)]
 pub enum GameState {
@@ -75,11 +73,10 @@ fn main() {
         .add_plugins((
             AssetLoaderPlugin,
             AudioPlugin,
-            MenuPlugin,
             EditorPlugin,
             GameplayPlugin,
             GraphicsPlugin,
-            HUDPlugin,
+            UIPlugin,
         ))
         .run();
 }

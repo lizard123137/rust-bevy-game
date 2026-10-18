@@ -1,0 +1,319 @@
+(
+    name: "Level 1",
+    description: "test level to see if the editor loading works",
+    objects: [
+        (
+            obj_type: Shader(
+                name: "fog",
+                size: (500.0, 100.0),
+            ),
+            pos: (0.0, 10.0, 2.0),
+        ),
+        (
+            obj_type: Item(
+                name: "mushroom_blue",
+            ),
+            pos: (0.0, 16.0, 1.0),
+        ),
+        (
+            obj_type: Item(
+                name: "mushroom_red",
+            ),
+            pos: (64.0, 64.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (-176.0, 0.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (-160.0, 0.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (-16.0, 48.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (-32.0, 48.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (-48.0, 48.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (-112.0, -80.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (-16.0, 80.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (-48.0, 80.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (-32.0, 80.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (0.0, 80.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (-64.0, 80.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (-16.0, 80.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (-48.0, 80.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (-32.0, 80.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (0.0, 80.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (-64.0, 80.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (64.0, -112.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (-80.0, -112.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (-80.0, -112.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (-144.0, -96.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (-144.0, 0.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (-144.0, 0.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (-128.0, 0.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (-112.0, -16.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (-112.0, 0.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (-96.0, 0.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (-80.0, 0.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (-64.0, 0.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (-48.0, 0.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (-48.0, 0.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (-32.0, 0.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (-16.0, 0.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (0.0, 0.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (16.0, 0.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (32.0, 0.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (48.0, 0.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (64.0, 0.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (80.0, 0.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (96.0, 0.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (48.0, 48.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (64.0, 48.0, 1.0),
+        ),
+        (
+            obj_type: Tile(
+                name: "grass",
+                solid: true,
+            ),
+            pos: (80.0, 48.0, 1.0),
+        ),
+    ],
+)

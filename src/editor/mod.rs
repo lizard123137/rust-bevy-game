@@ -1,51 +1,39 @@
-use bevy::{
-    input::mouse::AccumulatedMouseScroll,
-    prelude::*,
-};
+mod camera;
+mod change_list;
+pub mod events;
+pub mod file_handler;
+
+use camera::EditorCameraPlugin;
+use events::EditorEventsPlugin;
+
+pub use file_handler::file_changes_apply;
+
+use bevy::prelude::*;
+
 use crate::{
+    GameState,
+    editor::change_list::EditorChangeList,
     level::level_loader,
-    GameState
 };
 
 pub struct EditorPlugin;
 
 impl Plugin for EditorPlugin {
     fn build(&self, app: &mut App) {
+        // TODO impl default trait and open file with file browser on startup
+        app.insert_resource(EditorChangeList {
+            file_name: "assets/levels/level_temp.level.ron".to_string(),
+            level_name: "test".to_string(),
+            level_description: "test".to_string(),
+            changes: Vec::new(),
+        });
+        app.add_plugins((
+            EditorCameraPlugin,
+            EditorEventsPlugin,
+        ));
         app.add_systems(OnEnter(GameState::Editor), (
-            spawn_camera,
             level_loader::spawn_level,
         ));
-        app.add_systems(Update, (
-            camera_zoom
-                .run_if(in_state(GameState::Editor)),
-        ));
     }
 }
 
-fn spawn_camera(
-    mut commands: Commands,
-) {
-    commands.spawn((
-        Camera2d,
-    ));
-}
-
-fn camera_zoom(
-    accumulated_scroll: Res<AccumulatedMouseScroll>,
-    mut query: Query<&mut Projection, With<Camera2d>>,
-) {
-    if accumulated_scroll.delta.y == 0.0 {
-        return;
-    }
-
-    let zoom_sensitivity = 0.1;
-    let min_zoom = 0.2; // Max zoom in
-    let max_zoom = 5.0; // Max zoom out
-
-    for mut projection in &mut query {
-        if let Projection::Orthographic(ref mut ortho) = *projection {
-            let zoom_factor = 1.0 - accumulated_scroll.delta.y * zoom_sensitivity;
-            ortho.scale = (ortho.scale * zoom_factor).clamp(min_zoom, max_zoom);
-        }
-    }
-}

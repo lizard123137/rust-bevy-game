@@ -3,9 +3,9 @@ use bevy::prelude::*;
 use crate::GameState;
 use crate::gameplay::player::Frog;
 
-pub struct HUDPlugin;
+pub struct UIGamePlugin;
 
-impl Plugin for HUDPlugin {
+impl Plugin for UIGamePlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(OnEnter(GameState::Game), (
             spawn_text,

@@ -1,31 +1,26 @@
 use bevy::prelude::*;
-use crate::GameState;
 
-pub struct MenuPlugin;
+use crate::{
+    GameState,
+    ui::components,
+};
 
-impl Plugin for MenuPlugin {
+pub struct UIMenuPlugin;
+
+impl Plugin for UIMenuPlugin {
     fn build(&self, app: &mut App) {
         app.init_state::<MenuState>();
         app.add_systems(OnEnter(GameState::Menu), menu_setup);
-        app.add_systems(Update,
-            menu_action.run_if(in_state(GameState::Menu))
-        );
     }
 }
 
 #[derive(Clone, Copy, Default, Eq, PartialEq, Debug, Hash, States)]
-enum MenuState {
+pub enum MenuState {
     #[default]
     Main,
     Disabled,
 }
 
-#[derive(Component)]
-enum MenuButtonAction {
-    Game,
-    Editor,
-    Quit,
-}
 
 fn menu_setup (
     mut commands: Commands,
@@ -65,21 +60,21 @@ fn menu_setup (
                 ),
                 (
                     Button,
-                    MenuButtonAction::Game,
+                    components::ButtonAction::MenuGame,
                     children![(
                         Text::new("Game"),
                     )],
                 ),
                 (
                     Button,
-                    MenuButtonAction::Editor,
+                    components::ButtonAction::MenuEditor,
                     children![(
                         Text::new("Editor"),
                     )],
                 ),
                 (
                     Button,
-                    MenuButtonAction::Quit,
+                    components::ButtonAction::MenuQuit,
                     children![(
                         Text::new("Quit"),
                     )]
@@ -87,32 +82,4 @@ fn menu_setup (
             ],
         )]
     ));
-}
-
-fn menu_action(
-    interaction_query: Query<
-        (&Interaction, &MenuButtonAction),
-        (Changed<Interaction>, With<Button>),
-    >,
-    mut app_exit_writer: MessageWriter<AppExit>,
-    mut menu_state: ResMut<NextState<MenuState>>,
-    mut game_state: ResMut<NextState<GameState>>,
-) {
-    for (interaction, menu_button_action) in &interaction_query {
-        if *interaction == Interaction::Pressed {
-            match menu_button_action {
-                MenuButtonAction::Quit => {
-                    app_exit_writer.write(AppExit::Success);
-                }
-                MenuButtonAction::Game => {
-                    game_state.set(GameState::Game);
-                    menu_state.set(MenuState::Disabled);
-                }
-                MenuButtonAction::Editor => {
-                    game_state.set(GameState::Editor);
-                    menu_state.set(MenuState::Disabled);
-                }
-            }
-        }
-    }
 }

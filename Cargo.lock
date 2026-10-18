@@ -4532,6 +4532,7 @@ dependencies = [
  "bevy",
  "bevy_common_assets",
  "itertools 0.15.0",
+ "ron 0.12.2",
  "serde",
 ]
 
