@@ -8,6 +8,7 @@ use bevy::{
 
 use super::spawners;
 use crate::{
+    GameState,
     asset_loader::GameAssets,
     level::{
         spawners::shader::ShaderMaterials,
@@ -51,8 +52,9 @@ pub fn spawn_level(
     levels: Res<Assets<LevelData>>,
     asset_server: Res<AssetServer>,
     registries: Registries,
-    mut texture_atlas_layout: ResMut<Assets<TextureAtlasLayout>>,
+    game_state: Res<State<GameState>>,
     mut commands: Commands,
+    mut texture_atlas_layout: ResMut<Assets<TextureAtlasLayout>>,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ShaderMaterials,
 ) {
@@ -69,6 +71,7 @@ pub fn spawn_level(
     ) else { return };
 
     let mut solid_cells: HashSet<IVec2> = HashSet::new();
+    let current_game_state = game_state.get();
 
     for obj in &level.objects {
         match &obj.obj_type {
@@ -81,7 +84,7 @@ pub fn spawn_level(
                     solid_cells.insert((obj.pos.truncate() / 16.0).round().as_ivec2());
                 }
             },
-            ObjectType::Player => spawners::spawn_player(&mut commands, &asset_server, obj.pos),
+            ObjectType::Player => spawners::spawn_player(&mut commands, &asset_server, obj.pos, *current_game_state == GameState::Game),
             ObjectType::Item {name} => spawners::spawn_item(&mut commands, &asset_server, &item_registry, obj.pos, name),
         }
     }

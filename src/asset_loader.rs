@@ -35,7 +35,7 @@ fn load_assets(
     asset_server: Res<AssetServer>,
 ) {
     commands.insert_resource(GameAssets {
-        level: asset_server.load("levels/level_temp.level.ron"),
+        level: asset_server.load("levels/level_1.level.ron"),
         dialogues: asset_server.load("images/dialogues/default.dialogues.ron"),
         tiles: asset_server.load("images/tiles/default.tiles.ron"),
         items: asset_server.load("images/items/default.items.ron"),
