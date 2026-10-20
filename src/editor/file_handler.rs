@@ -16,7 +16,7 @@ pub fn file_changes_apply(change_list: &EditorChangeList) {
     for change in &change_list.changes {
         match change.change_type {
             EditorChangeType::Add => {
-                level.objects.push(change.object.clone().expect("Cannot add None object."));
+                level.objects.push(change.object.clone());
             },
             EditorChangeType::Remove => {
                 todo!();

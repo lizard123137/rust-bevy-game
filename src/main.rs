@@ -23,6 +23,7 @@ use bevy::prelude::*;
 
 // TODO gameplay
 // TODO     Store collision vector so you cant jump into what you're jumping off of
+// TODO     Add jumping timeout
 // TODO     Controller support (maybe autoaim)
 // TODO     Teleportation by digging into soft ground
 // TODO     Eating mushrooms gives you power ups but makes the frog more paranoid
@@ -50,6 +51,7 @@ use bevy::prelude::*;
 // TODO     Make the game hot reloadable to change configs during development
 // TODO     Refactor physics engine into multiple files
 // TODO     Somehow order systems to run in a way that makes sense
+// TODO     Refactor code to make better usage of events
 
 // TODO tree generator (maybe... its a bit over the top)
 // TODO     Make trees generate randomly from files that describe their structure
@@ -57,6 +59,11 @@ use bevy::prelude::*;
 
 // TODO world editor
 // TODO     Selectable menu with different types of tiles you can place
+// TODO     Loading level files
+// TODO     Multiple layers, maybe do it like photo editors (quantize Z-axis values)
+// TODO     Placing animated tiles
+// TODO     Adding dialogues in editor
+// TODO     Some kind of special event triggers
 
 #[derive(Clone, Copy, Default, Eq, PartialEq, Debug, Hash, States)]
 pub enum GameState {

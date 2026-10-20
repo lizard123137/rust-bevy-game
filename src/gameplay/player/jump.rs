@@ -8,7 +8,10 @@ use crate::{
     GameState,
     gameplay::{
         physics::Rigidbody,
-        player::Frog,
+        player::{
+            events::PlayerJump,
+            Frog,
+        },
     },
 };
 
@@ -43,5 +46,6 @@ fn activate_jump(
     rb.force += direction * jump_strength * 200.0;
 
     commands.trigger(PlaySound { name: "jump".to_string() });
+    commands.trigger(PlayerJump);
     frog.grounded = false;
 }

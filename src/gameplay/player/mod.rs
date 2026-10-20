@@ -1,8 +1,10 @@
 mod animation;
+mod events;
 mod grapple;
 mod jump;
 
 use animation::PlayerAnimationPlugin;
+use events::PlayerEventsPlugin;
 use grapple::PlayerGrapplePlugin;
 use jump::PlayerJumpPlugin;
 
@@ -18,6 +20,7 @@ impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins((
             PlayerAnimationPlugin,
+            PlayerEventsPlugin,
             PlayerGrapplePlugin,
             PlayerJumpPlugin,
         ));

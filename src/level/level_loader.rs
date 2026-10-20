@@ -38,6 +38,7 @@ pub enum ObjectType {
     Shader {name: String, size: Vec2},
     Tile {name: String, solid: bool},
     Player,
+    Empty, // For removing blocks in editor
 }
 
 #[derive(SystemParam)]
@@ -86,6 +87,7 @@ pub fn spawn_level(
             },
             ObjectType::Player => spawners::spawn_player(&mut commands, &asset_server, obj.pos, *current_game_state == GameState::Game),
             ObjectType::Item {name} => spawners::spawn_item(&mut commands, &asset_server, &item_registry, obj.pos, name),
+            ObjectType::Empty => continue,
         }
     }
 

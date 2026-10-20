@@ -9,6 +9,7 @@ use crate::{
             EditorChangeType,
         },
         file_handler,
+        state::EditorState,
     },
     level::{
         level_loader::{
@@ -27,13 +28,13 @@ impl Plugin for EditorEventsPlugin {
         app.add_observer(on_editor_place);
         app.add_observer(on_editor_remove);
         app.add_observer(on_editor_save);
+        app.add_observer(on_editor_layer_select);
     }
 }
 
 #[derive(Event)]
 pub struct EditorPlace {
     pub pos: Vec3,
-    pub name: String,
 }
 
 fn on_editor_place(
@@ -41,23 +42,27 @@ fn on_editor_place(
     assets: Res<GameAssets>,
     asset_server: Res<AssetServer>,
     registries: Registries,
+    state: Res<EditorState>,
     mut change_list: ResMut<EditorChangeList>,
     mut texture_atlas_layout: ResMut<Assets<TextureAtlasLayout>>,
     mut commands: Commands,
 ) {
     let Some(tile_registry) = registries.tile.get(&assets.tiles) else { return };
 
-    spawners::spawn_tile(&mut commands, &mut texture_atlas_layout, &asset_server, &tile_registry, event.pos, &event.name);
+    match &state.selected_object {
+        ObjectType::Tile {name, solid } => {
+            spawners::spawn_tile(&mut commands, &mut texture_atlas_layout, &asset_server, &tile_registry, event.pos, &name);
+        },
+        _ => todo!(),
+    }
+    
     change_list.changes.push(
         EditorChange {
             change_type: EditorChangeType::Add,
-            object: Some(ObjectData {
-                obj_type: ObjectType::Tile {
-                    name: event.name.clone(),
-                    solid: true,
-                },
+            object: ObjectData {
+                obj_type: state.selected_object.clone(),
                 pos: event.pos,
-            }),
+            },
         }
     );
 }
@@ -69,12 +74,29 @@ pub struct EditorRemove {
 
 fn on_editor_remove(
     event: On<EditorRemove>,
+    query: Query<(Entity, &Transform)>,
     mut change_list: ResMut<EditorChangeList>,
+    mut commands: Commands,
 ) {
+    let to_remove: Vec<Entity> = query.iter()
+        .find_map(|(entity, transform)| {
+            let entity_position = transform.translation;
+            (entity_position == event.pos).then_some(entity)
+        })
+        .into_iter()
+        .collect();
+
+    for entity in to_remove {
+        commands.entity(entity).despawn();
+    }
+
     change_list.changes.push(
         EditorChange {
             change_type: EditorChangeType::Remove,
-            object: None,
+            object: ObjectData {
+                pos: event.pos,
+                obj_type: ObjectType::Empty,
+            },
         }
     );
 }
@@ -87,4 +109,16 @@ fn on_editor_save(
     change_list: Res<EditorChangeList>,
 ) {
     file_handler::file_changes_apply(&change_list);
+}
+
+#[derive(Event)]
+pub struct EditorLayerSelect {
+    pub layer: f32,
+}
+
+fn on_editor_layer_select(
+    event: On<EditorLayerSelect>,
+    mut state: ResMut<EditorState>,
+) {
+    state.selected_layer = event.layer;
 }

@@ -14,9 +14,10 @@ pub struct EditorChangeList {
 
 pub struct EditorChange {
     pub change_type: EditorChangeType,
-    pub object: Option<ObjectData>,
+    pub object: ObjectData,
 }
 
+// Maybe convert to use enums that store the objects or what to remove
 pub enum EditorChangeType {
     Add,
     Remove,

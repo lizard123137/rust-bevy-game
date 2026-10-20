@@ -5,9 +5,12 @@ use bevy::{
 };
 
 use crate::{
-    editor::events::{
-        EditorPlace,
-        EditorRemove,
+    editor::{
+        events::{
+            EditorPlace,
+            EditorRemove,
+        },
+        state::EditorState,
     },
     GameState,
 };
@@ -66,6 +69,7 @@ fn camera_input_mouse(
     buttons: Res<ButtonInput<MouseButton>>,
     window: Single<&Window, With<PrimaryWindow>>,
     cameras: Query<(&Camera, &GlobalTransform), With<EditorCamera>>,
+    state: Res<EditorState>,
     mut commands: Commands,
     mut gizmos: Gizmos,
 ) {
@@ -104,10 +108,10 @@ fn camera_input_mouse(
     );
 
     if buttons.just_pressed(MouseButton::Left) {
-        commands.trigger(EditorPlace { pos: quantified_position.extend(1.0), name: "grass".to_string() });
+        commands.trigger(EditorPlace { pos: quantified_position.extend(state.selected_layer) });
     }
 
     if buttons.just_pressed(MouseButton::Right) {
-        commands.trigger(EditorRemove { pos: quantified_position.extend(1.0) });
+        commands.trigger(EditorRemove { pos: quantified_position.extend(state.selected_layer) });
     }
 }

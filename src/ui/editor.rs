@@ -1,7 +1,4 @@
-use bevy::{
-    prelude::*,
-    ui_widgets::{observe, Activate},
-};
+use bevy::prelude::*;
 
 use crate::{
     editor::events::EditorSave,
@@ -19,21 +16,59 @@ impl Plugin for UIEditorPlugin {
     }
 }
 
-fn spawn_editor_ui(
-    asset_server: Res<AssetServer>,
-    mut commands: Commands,
-) {
+fn spawn_editor_ui(mut commands: Commands) {
     commands.spawn((
         Node {
             position_type: PositionType::Absolute,
-            bottom: px(12),
-            left: px(12),
-            flex_direction: FlexDirection::Column,
+            width: percent(100),
+            height: percent(100),
             ..default()
         },
-        children![(
-            components::spawn_button(&asset_server, "save", IVec2::new(150, 60)),
-            components::ButtonAction::EditorSave,
-        )],
+        children![
+            (
+                Node {
+                    position_type: PositionType::Absolute,
+                    bottom: px(12),
+                    left: px(12),
+                    flex_direction: FlexDirection::Column,
+                    ..default()
+                },
+                children![(
+                    components::spawn_button("save", IVec2::new(150, 60)),
+                    components::ButtonAction::EditorSave,
+                )],
+            ),
+            (
+                Node {
+                    position_type: PositionType::Absolute,
+                    bottom: px(12),
+                    right: px(12),
+                    flex_direction: FlexDirection::Column,
+                    ..default()
+                },
+                children![
+                    (
+                        components::spawn_button("Layer 2", IVec2::new(200, 60)),
+                        components::ButtonAction::EditorLayerSelect(2.0),
+                    ),
+                    (
+                        components::spawn_button("Layer 1", IVec2::new(200, 60)),
+                        components::ButtonAction::EditorLayerSelect(1.0),
+                    ),
+                    (
+                        components::spawn_button("Layer 0", IVec2::new(200, 60)),
+                        components::ButtonAction::EditorLayerSelect(0.0),
+                    ),
+                    (
+                        components::spawn_button("Layer -1", IVec2::new(200, 60)),
+                        components::ButtonAction::EditorLayerSelect(-1.0),
+                    ),
+                    (
+                        components::spawn_button("Layer -2", IVec2::new(200, 60)),
+                        components::ButtonAction::EditorLayerSelect(-2.0),
+                    )
+                ],
+            )
+        ]
     ));
 }

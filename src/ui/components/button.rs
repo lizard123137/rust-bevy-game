@@ -8,17 +8,19 @@ use bevy::{
 use crate::{
     GameState,
     ui::menu::MenuState,
-    editor::events::EditorSave,
+    editor::events::{
+        EditorLayerSelect,
+        EditorSave,
+    },
 };
 
 const NORMAL_BUTTON: Color = Color::srgb(0.15, 0.15, 0.15);
 const HOVERED_BUTTON: Color = Color::srgb(0.25, 0.25, 0.25);
 const PRESSED_BUTTON: Color = Color::srgb(0.35, 0.75, 0.35);
 
-// TODO customize this... For not its ripped straight from the official bevy examples 
+// TODO customize this... For now its ripped straight from the official bevy examples 
 
 pub fn spawn_button(
-    asset_server: &AssetServer,
     text: &str,
     size: IVec2,
 ) -> impl Bundle {
@@ -59,7 +61,6 @@ pub fn update_buttons_visual(
         ),
         With<Button>,
     >,
-    mut text_query: Query<&mut Text>,
 ) {
     for (hovered, pressed, mut color, mut border_color, children) in &mut buttons {
         match (hovered.get(), pressed) {
@@ -109,6 +110,9 @@ pub fn update_buttons_action(
 
                 ButtonAction::EditorSave => {
                     commands.trigger(EditorSave);
+                },
+                ButtonAction::EditorLayerSelect(layer) => {
+                    commands.trigger(EditorLayerSelect { layer: *layer });
                 }
             }
         }
@@ -122,4 +126,5 @@ pub enum ButtonAction {
     MenuQuit,
 
     EditorSave,
+    EditorLayerSelect(f32),
 }

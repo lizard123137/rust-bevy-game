@@ -2,6 +2,7 @@ mod camera;
 mod change_list;
 pub mod events;
 pub mod file_handler;
+mod state;
 
 use camera::EditorCameraPlugin;
 use events::EditorEventsPlugin;
@@ -12,8 +13,14 @@ use bevy::prelude::*;
 
 use crate::{
     GameState,
-    editor::change_list::EditorChangeList,
-    level::level_loader,
+    editor::{
+        change_list::EditorChangeList,
+        state::EditorState,
+    },
+    level::{
+        level_loader,      
+        level_loader::ObjectType,
+    },
 };
 
 pub struct EditorPlugin;
@@ -26,6 +33,13 @@ impl Plugin for EditorPlugin {
             level_name: "test".to_string(),
             level_description: "test".to_string(),
             changes: Vec::new(),
+        });
+        app.insert_resource(EditorState {
+            selected_layer: 0.0,
+            selected_object: ObjectType::Tile {
+                name: "grass".to_string(),
+                solid: true,
+            }
         });
         app.add_plugins((
             EditorCameraPlugin,
