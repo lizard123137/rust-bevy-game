@@ -7,8 +7,6 @@ mod state;
 use camera::EditorCameraPlugin;
 use events::EditorEventsPlugin;
 
-pub use file_handler::file_changes_apply;
-
 use bevy::prelude::*;
 
 use crate::{

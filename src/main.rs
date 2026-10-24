@@ -29,6 +29,8 @@ use bevy::prelude::*;
 // TODO     Eating mushrooms gives you power ups but makes the frog more paranoid
 // TODO     Paranoia intensifies the horror elements (Maybe add eye sprites that open as it increases)
 // TODO     Snap objects to 16px grid before spawning (right now they are offset by 8px)
+// TODO     Make some kind of event based state machine for switching between animation sprites for player
+// TODO     Refactor jumping system to check if player is grounded with a ray pointing at the ground
 
 // TODO audio
 // TODO     Make a system where sfx can be assigned to events

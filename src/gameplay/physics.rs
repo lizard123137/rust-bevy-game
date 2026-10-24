@@ -8,6 +8,10 @@ use crate::{
     GameState,
     gameplay::{
         player::{
+            events::{
+                PlayerJump,
+                PlayerLand,
+            },
             Frog,
             frog_tongue_active,
         },
@@ -151,6 +155,7 @@ fn check_collisions(
     grid: Res<SpatialHashGrid>,
     mut query: Query<(Entity, &mut Transform, &mut Rigidbody)>,
     mut frogs: Query<&mut Frog>,
+    mut commands: Commands,
 ) {
     let moveable_entities: Vec<(Entity, Vec2, Vec2)> = query
         .iter()
@@ -233,9 +238,11 @@ fn check_collisions(
 
                     if let Ok(mut frog) = frogs.get_mut(ent_a) {
                         frog.grounded = true;
+                        commands.trigger(PlayerLand);
                     }
                     if let Ok(mut frog) = frogs.get_mut(ent_b) {
                         frog.grounded = true;
+                        commands.trigger(PlayerJump);
                     }
                 }
             }

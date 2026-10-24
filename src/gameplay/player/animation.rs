@@ -52,8 +52,6 @@ fn on_tongue_create(
     let tongue = meshes.add(Rectangle::new(1.0, 2.0)); // Length will later be updated in update_tongue
     let color = materials.add(Color::srgb(0.2, 0.5, 0.0));     
 
-    sprite.image = asset_server.load("images/frog_open.png");
-
     commands.spawn(
         (
             Tongue,
@@ -75,8 +73,6 @@ fn on_tongue_destroy(
     mut commands: Commands,
     mut sprite: Single<&mut Sprite, With<Frog>>,
 ) {
-    sprite.image = asset_server.load("images/frog.png");
-    
     for entity in query.iter() {
         commands.entity(entity).despawn();
     }

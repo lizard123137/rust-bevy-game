@@ -1,5 +1,5 @@
 mod animation;
-mod events;
+pub mod events;
 mod grapple;
 mod jump;
 
