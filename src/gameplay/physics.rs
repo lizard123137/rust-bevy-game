@@ -202,6 +202,16 @@ fn check_collisions(
                     let overlap_x = (a_hs.x + b_hs.x) - (a_ctr.x - b_ctr.x).abs();
                     let overlap_y = (a_hs.y + b_hs.y) - (a_ctr.y - b_ctr.y).abs();
 
+                    // For the player only count collisions on the Y axis as landing events.
+                    let a_landed = overlap_y <= overlap_x
+                        && a_ctr.y > b_ctr.y
+                        && rb_a.velocity.y <= 0.0
+                        && rb_a.force.y <= 0.0;
+                    let b_landed = overlap_y <= overlap_x
+                        && b_ctr.y > a_ctr.y
+                        && rb_b.velocity.y <= 0.0
+                        && rb_b.force.y <= 0.0;
+
                     if overlap_x < overlap_y {
                         let sign = if a_ctr.x < b_ctr.x { -1.0 } else { 1.0 };
                         let push = Vec3::new(overlap_x * sign, 0.0, 0.0);
@@ -236,13 +246,21 @@ fn check_collisions(
                         }
                     }
 
-                    if let Ok(mut frog) = frogs.get_mut(ent_a) {
-                        frog.grounded = true;
-                        commands.trigger(PlayerLand);
+                    if a_landed {
+                        if let Ok(mut frog) = frogs.get_mut(ent_a) {
+                            if !frog.grounded {
+                                frog.grounded = true;
+                                commands.trigger(PlayerLand);
+                            }
+                        }
                     }
-                    if let Ok(mut frog) = frogs.get_mut(ent_b) {
-                        frog.grounded = true;
-                        commands.trigger(PlayerJump);
+                    if b_landed {
+                        if let Ok(mut frog) = frogs.get_mut(ent_b) {
+                            if !frog.grounded {
+                                frog.grounded = true;
+                                commands.trigger(PlayerLand);
+                            }
+                        }
                     }
                 }
             }

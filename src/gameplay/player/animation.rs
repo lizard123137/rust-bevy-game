@@ -40,6 +40,7 @@ pub struct TongueDestroy;
 fn on_tongue_create(
     event: On<TongueCreate>,
     asset_server: Res<AssetServer>,
+    frog: Single<&Frog>,
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
@@ -64,17 +65,30 @@ fn on_tongue_create(
             },
         )
     );
+
+    if frog.grounded {
+        sprite.image = asset_server.load("images/frog_open.png");
+    } else {
+        sprite.image = asset_server.load("images/frog_jump_open.png");
+    }    
 }
 
 fn on_tongue_destroy(
     _event: On<TongueDestroy>,
     asset_server: Res<AssetServer>,
     query: Query<Entity, With<Tongue>>,
+    frog: Single<&Frog>,
     mut commands: Commands,
     mut sprite: Single<&mut Sprite, With<Frog>>,
 ) {
     for entity in query.iter() {
         commands.entity(entity).despawn();
+    }
+
+    if frog.grounded {
+        sprite.image = asset_server.load("images/frog.png");
+    } else {
+        sprite.image = asset_server.load("images/frog_jump.png");
     }
 }
 
