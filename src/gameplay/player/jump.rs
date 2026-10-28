@@ -41,6 +41,12 @@ fn activate_jump(
     let magnitude = direction.length();
     direction /= magnitude; // Normalize
 
+    // Prevent jumping downwards
+    const MIN_JUMP_ANGLE: f32 = 0.2;
+    if direction.y < MIN_JUMP_ANGLE {
+        return;
+    }
+
     let jump_strength = magnitude.clamp(0.0, frog.range);
 
     rb.force += direction * jump_strength * 200.0;
