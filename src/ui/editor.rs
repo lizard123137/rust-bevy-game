@@ -1,7 +1,6 @@
 use bevy::prelude::*;
 
 use crate::{
-    editor::events::EditorSave,
     GameState,
     ui::components,
 };

@@ -8,10 +8,7 @@ use crate::{
     GameState,
     gameplay::{
         player::{
-            events::{
-                PlayerJump,
-                PlayerLand,
-            },
+            events::PlayerLand,
             Frog,
             frog_tongue_active,
         },

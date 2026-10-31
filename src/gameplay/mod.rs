@@ -1,3 +1,4 @@
+pub mod dialogue;
 pub mod physics;
 pub mod player;
 pub mod raycasting;
@@ -14,6 +15,7 @@ pub struct GameplayPlugin;
 impl Plugin for GameplayPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins((
+            dialogue::DialoguePlugin,
             physics::PhysicsPlugin,
             player::PlayerPlugin,
             spatial_hash_grid::SpatialHashGridPlugin,

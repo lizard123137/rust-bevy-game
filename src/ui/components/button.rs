@@ -57,12 +57,11 @@ pub fn update_buttons_visual(
             Has<Pressed>,
             &mut BackgroundColor,
             &mut BorderColor,
-            &Children,
         ),
         With<Button>,
     >,
 ) {
-    for (hovered, pressed, mut color, mut border_color, children) in &mut buttons {
+    for (hovered, pressed, mut color, mut border_color) in &mut buttons {
         match (hovered.get(), pressed) {
             // Pressed (and, since you can only press what you're hovering, also hovered).
             (_, true) => {

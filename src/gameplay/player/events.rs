@@ -17,10 +17,10 @@ pub struct PlayerJump;
 fn on_player_jump(
     _event: On<PlayerJump>,
     asset_server: Res<AssetServer>,
-    Frog: Single<&Frog>,
+    frog: Single<&Frog>,
     mut sprite: Single<&mut Sprite, With<Frog>>,
 ) {
-    if Frog.tongue_active {
+    if frog.tongue_active {
         sprite.image = asset_server.load("images/frog_jump_open.png");
     } else {
         sprite.image = asset_server.load("images/frog_jump.png");
@@ -33,10 +33,10 @@ pub struct PlayerLand;
 fn on_player_land(
     _event: On<PlayerLand>,
     asset_server: Res<AssetServer>,
-    Frog: Single<&Frog>,
+    frog: Single<&Frog>,
     mut sprite: Single<&mut Sprite, With<Frog>>,
 ) {
-    if Frog.tongue_active {
+    if frog.tongue_active {
         sprite.image = asset_server.load("images/frog_open.png");
     } else {
         sprite.image = asset_server.load("images/frog.png");
